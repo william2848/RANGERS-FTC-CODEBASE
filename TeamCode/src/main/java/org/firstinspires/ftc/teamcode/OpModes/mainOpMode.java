@@ -1,8 +1,11 @@
 package org.firstinspires.ftc.teamcode.OpModes;
 
+import com.pedropathing.math.Pose;
 import com.seattlesolvers.solverslib.command.CommandOpMode;
 import com.seattlesolvers.solverslib.command.RunCommand;
+import com.seattlesolvers.solverslib.command.button.GamepadButton;
 import com.seattlesolvers.solverslib.gamepad.GamepadEx;
+import com.seattlesolvers.solverslib.gamepad.GamepadKeys;
 
 import static org.firstinspires.ftc.teamcode.OpModes.Holder.*;
 
@@ -19,6 +22,9 @@ public class mainOpMode extends CommandOpMode {
                 driver.getLeftX(),
                 driver.getRightX()
         )));
+
+        driver.getGamepadButton(GamepadKeys.Button.A)
+                .whenPressed(driveBase.driveTo(new Pose(0,0,0)));
         while(opModeInInit()){
             telemetry.addData("Press b for blue and y for red",null);
             if(gamepad1.b){
