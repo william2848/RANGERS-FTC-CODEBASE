@@ -1,14 +1,25 @@
 package org.firstinspires.ftc.teamcode.pedro;
 
+import com.pedropathing.drivetrain.Drivetrain;
 import com.pedropathing.follower.Follower;
+import com.pedropathing.localization.Localizer;
+import com.pedropathing.revhub.drivetrains.Mecanum;
 import com.pedropathing.revhub.drivetrains.MecanumConfig;
+import com.pedropathing.revhub.localizers.PinpointConfig;
+import com.pedropathing.revhub.localizers.PinpointLocalizer;
+import com.qualcomm.hardware.gobilda.GoBildaPinpointDriver;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
+import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
+
 public class Constants {
     public static Follower create(HardwareMap h) {
-        //return new Follower(Drivetrain, Localizer, Foresight);
-        return null;
+        Drivetrain drivetrain = new Mecanum(h,driveConfig);
+        Localizer localizerPinpoint = new PinpointLocalizer(h,pinpointLocalizerConfig);
+        Algorithm algorithm = new Foresight(h,)
+        return new Follower(new MecanumConfig(h,driveConfig), Localizer, Foresight(foresightSetupPlaceholder));
+
     }
     public static MecanumConfig driveConfig = new MecanumConfig(
             c -> {
@@ -23,6 +34,16 @@ public class Constants {
                 c.backRightDirection.set(DcMotorSimple.Direction.FORWARD);
             }
     );
-
+    public static PinpointConfig pinpointLocalizerConfig = new PinpointConfig(c -> {
+        c.name.set("pinpoint");
+        c.podType.set(GoBildaPinpointDriver.GoBildaOdometryPods.goBILDA_SWINGARM_POD);
+        c.xPodOffset.set(2.0700134818009506);
+        c.yPodOffset.set(4.044714199276421);
+        c.xPodDirection.set(GoBildaPinpointDriver.EncoderDirection.REVERSED);
+        c.yPodDirection.set(GoBildaPinpointDriver.EncoderDirection.FORWARD);
+        c.globalDistanceUnit.set(DistanceUnit.INCH);
+        c.offsetUnits.set(DistanceUnit.INCH);
+    });
+    public static ForesightConfig foresightSetupPlaceholder = new ForesightConfig()//placeholder
 
 }

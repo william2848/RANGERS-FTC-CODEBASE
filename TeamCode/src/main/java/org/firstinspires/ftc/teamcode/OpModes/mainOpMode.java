@@ -23,8 +23,7 @@ public class mainOpMode extends CommandOpMode {
                 driver.getRightX()
         )));
 
-        driver.getGamepadButton(GamepadKeys.Button.A)
-                .whenPressed(driveBase.driveTo(new Pose(0,0,0)));
+        driver.getGamepadButton(GamepadKeys.Button.A).whenPressed(driveBase.driveTo(new Pose(0,0,0)));
         while(opModeInInit()){
             telemetry.addData("Press b for blue and y for red",null);
             if(gamepad1.b){
