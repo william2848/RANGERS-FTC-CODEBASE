@@ -17,11 +17,7 @@ public class mainOpMode extends CommandOpMode {
     private GamepadEx driver = new GamepadEx(gamepad1);
     private GamepadEx operator = new GamepadEx(gamepad2);
     public void initialize(){
-        driveBase.setDefaultCommand(new RunCommand(()->driveBase.manual(
-                driver.getLeftY(),
-                driver.getLeftX(),
-                driver.getRightX()
-        )));
+        driveBase.setDefaultCommand(new RunCommand(()->driveBase.manual(driver.getLeftY(), driver.getLeftX(), driver.getRightX())));
 
         driver.getGamepadButton(GamepadKeys.Button.A).whenPressed(driveBase.driveTo(new Pose(0,0,0)));
         while(opModeInInit()){

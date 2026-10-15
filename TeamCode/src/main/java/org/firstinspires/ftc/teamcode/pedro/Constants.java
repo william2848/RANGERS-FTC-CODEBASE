@@ -1,5 +1,8 @@
 package org.firstinspires.ftc.teamcode.pedro;
 
+import com.pedropathing.algorithm.Algorithm;
+import com.pedropathing.algorithm.Foresight;
+import com.pedropathing.algorithm.ForesightConfig;
 import com.pedropathing.drivetrain.Drivetrain;
 import com.pedropathing.follower.Follower;
 import com.pedropathing.localization.Localizer;
@@ -16,9 +19,9 @@ import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 public class Constants {
     public static Follower create(HardwareMap h) {
         Drivetrain drivetrain = new Mecanum(h,driveConfig);
-        Localizer localizerPinpoint = new PinpointLocalizer(h,pinpointLocalizerConfig);
-        Algorithm algorithm = new Foresight(h,)
-        return new Follower(new MecanumConfig(h,driveConfig), Localizer, Foresight(foresightSetupPlaceholder));
+        Localizer pinpointLocalizer = new PinpointLocalizer(h,pinpointLocalizerConfig);
+        Algorithm algorithm = new Foresight(foresightSetupPlaceholder);
+        return new Follower(pinpointLocalizer, drivetrain, algorithm);
 
     }
     public static MecanumConfig driveConfig = new MecanumConfig(
@@ -44,6 +47,6 @@ public class Constants {
         c.globalDistanceUnit.set(DistanceUnit.INCH);
         c.offsetUnits.set(DistanceUnit.INCH);
     });
-    public static ForesightConfig foresightSetupPlaceholder = new ForesightConfig()//placeholder
+    public static ForesightConfig foresightSetupPlaceholder = new ForesightConfig(c->{});//placeholder
 
 }

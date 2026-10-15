@@ -1,13 +1,13 @@
 package org.firstinspires.ftc.teamcode.subsytems;
 
 import static com.pedropathing.api.Paths.line;
-import static org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.hardwareMap;
 
 import com.pedropathing.api.PoseFactory;
 import com.pedropathing.follower.Follower;
 import com.pedropathing.math.Pose;
 import com.pedropathing.paths.Path;
 import com.pedropathing.paths.curves.Line;
+import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.seattlesolvers.solverslib.command.RunCommand;
 import com.seattlesolvers.solverslib.command.SubsystemBase;
 import com.seattlesolvers.solverslib.pedroCommand.FollowPathCommand;
@@ -18,7 +18,7 @@ public class DriveBase extends SubsystemBase {
     private Follower follower;
     private final PoseFactory p = PoseFactory.degrees(); // add this
 
-    public DriveBase() {
+    public DriveBase(HardwareMap hardwareMap) {
         follower = Constants.create(hardwareMap);
         register();
     }
