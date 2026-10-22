@@ -29,13 +29,14 @@ public class DriveBase extends SubsystemBase {
     public void periodic(){
         follower.update();
     }
+    public Pose getPose(){return follower.pose();}
 
     private Path getPath(Pose target){
         return line(follower.pose(),target).linear(follower.pose(),target);
     }
 
     public FollowPathCommand driveTo(Pose target){
-        return new FollowPathCommand(follower, getPath(target));
+        return new FollowPathCommand(follower, getPath(target)); //apparently this doesn't work, it sets mode to FOLLOW, but because it gives no arguments it cannot override the default command, which it must because they both affect drive base. so the default command resets the mode to MANUAL every iteration.
     }
 
 

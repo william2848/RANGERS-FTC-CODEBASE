@@ -21,6 +21,7 @@ public class Constants {
         Drivetrain drivetrain = new Mecanum(h,driveConfig);
         Localizer pinpointLocalizer = new PinpointLocalizer(h,pinpointLocalizerConfig);
         Algorithm algorithm = new Foresight(foresightSetupPlaceholder);
+
         return new Follower(pinpointLocalizer, drivetrain, algorithm);
 
     }
