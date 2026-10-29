@@ -31,6 +31,13 @@ dependencies {
     compileOnly 'org.projectlombok:lombok:1.18.40'
     annotationProcessor 'org.projectlombok:lombok:1.18.40'
 }
+
+// Without the Pedro tuning library (see gradle.properties), skip the code that needs it.
+if (!project.findProperty('pedroTuning')?.toString()?.toBoolean()) {
+    tasks.withType(JavaCompile).configureEach {
+        exclude '**/teamcode/pedro/Tuning.java', '**/teamcode/pedro/procedures/**'
+    }
+}
 repositories {
     maven {
         url "https://repo.dairy.foundation/releases"

@@ -18,5 +18,5 @@ public class Tuning {
     @Tuner
     public static Procedure pinpointTuner(){return new PinpointTuner();}
     @Tuner
-    public static Procedure foresightTuner(){return new ForesightTuner(h->new PinpointLocalizer(h, Constants.pinpointLocalizerConfig), h->new Mecanum(h,Constants.driveConfig));}
+    public static Procedure foresightTuner(){return new ForesightTuner(h->new PinpointLocalizer(h, Constants.pinpointLocalizerConfig), h->new Mecanum(h,Constants.drivetrainConfig));}
 }
