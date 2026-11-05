@@ -9,8 +9,6 @@ import com.seattlesolvers.solverslib.command.SubsystemBase;
 import com.seattlesolvers.solverslib.hardware.motors.Motor;
 import com.seattlesolvers.solverslib.hardware.motors.MotorGroup;
 
-
-
 public class ShooterSubsystem extends SubsystemBase {
 
   private final Motor rightShooter;
@@ -26,7 +24,7 @@ public class ShooterSubsystem extends SubsystemBase {
                 RobotConstants.shooterConstants.CLICKS_PER_REV,
                 RobotConstants.shooterConstants.MAX_HD_HEX);
         shooterMotors = new MotorGroup(leftShooter, rightShooter);
-        rightShooter.setInverted(true);
+
         shooterMotors.setVeloCoefficients(
                 RobotConstants.shooterConstants.kP,
                 RobotConstants.shooterConstants.kI,
@@ -55,6 +53,15 @@ public class ShooterSubsystem extends SubsystemBase {
                RobotConstants.shooterConstants.MAX_HD_HEX *
                RobotConstants.shooterConstants.CLICKS_PER_REV / 60.0;
 
+    }
+    public void updateCoefficiants(){
+        shooterMotors.setVeloCoefficients(
+                RobotConstants.shooterConstants.kP,
+                RobotConstants.shooterConstants.kI,
+                RobotConstants.shooterConstants.kD);//Set PID Value
+        shooterMotors.setFeedforwardCoefficients(
+                RobotConstants.shooterConstants.kS,
+                RobotConstants.shooterConstants.kV);
     }
     public void shoot(){
         this.currentPercent =
