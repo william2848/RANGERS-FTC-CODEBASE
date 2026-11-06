@@ -49,6 +49,10 @@ public class mainOpMode extends CommandOpMode {
                 .whenPressed(new InstantCommand(() -> intakeTransitionSubsystem.setIntakeAndTransition(0.8, 0.8)))
                 .whenReleased(new InstantCommand(() -> intakeTransitionSubsystem.stop()));
 
+        driver.getGamepadButton(GamepadKeys.Button.A)
+                .whenPressed(new InstantCommand(() -> intakeTransitionSubsystem.setTransitionOnly(0.8)))
+                .whenReleased(new InstantCommand(() -> intakeTransitionSubsystem.stop()));
+
         // Add Button B -> just transition, also make a sequential servo command (.atSpeed)
         // for now, operator.getGamepadButton(GamepadKeys.Button.B).whenPressed(new RunCommand(()->autoScript.initialize()));
         // for now driver.getGamepadButton(GamepadKeys.Button.A).whenPressed(driveBase.driveTo(new Pose(0,0,0)));

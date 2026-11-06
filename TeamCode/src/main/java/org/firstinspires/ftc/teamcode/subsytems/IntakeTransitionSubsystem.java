@@ -24,7 +24,7 @@ public class IntakeTransitionSubsystem extends SubsystemBase {
 
     public void setIntakeAndTransition(double intake, double transition){
         this.intake.set(-intake);
-        this.transition.set(-transition);
+        this.transition.set(transition);
     }
 
     public void setTransitionOnly(double power){

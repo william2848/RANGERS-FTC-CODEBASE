@@ -73,6 +73,12 @@ public class ShooterSubsystem extends SubsystemBase {
     currentPercent = 0;
     }
 
+    public boolean isAtSpeed(){
+        double target = getTargetTicksPerSec();
+        return target > 0 && Math.abs(getLeftVelocity() - target) < target *.05;
+
+    }
+
     @Override
     public void periodic(){//temporary for PID Tuning
        ;//Set S and V Value
