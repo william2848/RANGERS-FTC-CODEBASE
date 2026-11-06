@@ -12,8 +12,8 @@ public class ShooterRawTest extends LinearOpMode {
         DcMotorEx right = hardwareMap.get(DcMotorEx.class, "rightShooter");
         waitForStart();
         while (opModeIsActive()) {
-            left.setPower(gamepad1.a ? 0.4 : 0);
-            right.setPower(gamepad1.b ? 0.4 : 0);
+            left.setPower(gamepad1.a ? 1.0 : 0);
+            right.setPower(gamepad1.b ? 1.0 : 0);
             telemetry.addData("left vel", left.getVelocity());
             telemetry.addData("right vel", right.getVelocity());
             telemetry.update();
