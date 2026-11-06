@@ -96,6 +96,12 @@ public class Shooter extends SubsystemBase {
 
     public boolean targetVelocity(double target){return(Math.abs(velocity())>=Math.abs(target));}
 
+    public boolean isAtSpeed(){
+        double target = getTargetTicksPerSec();
+        return target > 0 && Math.abs(getLeftVelocity() - target) < target *.05;
+
+    }
+
     @Override
     public void periodic(){
        ;//we need to set S and V Value
