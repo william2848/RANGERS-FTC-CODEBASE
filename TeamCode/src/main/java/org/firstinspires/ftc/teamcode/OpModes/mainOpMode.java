@@ -22,15 +22,15 @@ public class mainOpMode extends CommandOpMode {
     private Shooter shooter;
     private Intake intake;
     public void initialize(){
-        intake = new Intake(hardwareMap);
-        shooter = new Shooter(hardwareMap);
+        //intake = new Intake(hardwareMap);
+        //shooter = new Shooter(hardwareMap);
         operator = new GamepadEx(gamepad2);
         driver = new GamepadEx(gamepad1);
         driveBase = new DriveBase(hardwareMap);
         driveBase.setDefaultCommand(new RunCommand(()->driveBase.manual(driver.getLeftY(), driver.getLeftX(), driver.getRightX()),driveBase));
-        driver.getGamepadButton(GamepadKeys.Button.A).whenPressed(driveBase.driveTo(new Pose(0,0,0)));
-        driver.getGamepadButton(GamepadKeys.Button.B).whenPressed(new shootSequence(shooter,intake));
-        driver.getGamepadButton(GamepadKeys.Button.RIGHT_BUMPER).toggleWhenPressed(intake.runIntake(Constants.intakeConstants.mainIntakeVel, Constants.intakeConstants.transferVel),intake.stopIntake());
+        driver.getGamepadButton(GamepadKeys.Button.A).whenPressed(driveBase.driveTo(new Pose(10,5,Math.toRadians(Math.PI))));
+       // driver.getGamepadButton(GamepadKeys.Button.B).whenPressed(new shootSequence(shooter,intake));
+     //   driver.getGamepadButton(GamepadKeys.Button.RIGHT_BUMPER).toggleWhenPressed(intake.runIntake(Constants.intakeConstants.mainIntakeVel, Constants.intakeConstants.transferVel),intake.stopIntake());
         while(opModeInInit()){
             telemetry.addData("Press b for blue and y for red",null);
 
