@@ -9,7 +9,6 @@ import com.seattlesolvers.solverslib.command.RunCommand;
 import com.seattlesolvers.solverslib.gamepad.GamepadEx;
 import com.seattlesolvers.solverslib.gamepad.GamepadKeys;
 
-import org.firstinspires.ftc.teamcode.Commands.shootSequence;
 import org.firstinspires.ftc.teamcode.subsytems.DriveBase;
 import org.firstinspires.ftc.teamcode.subsytems.Intake;
 import org.firstinspires.ftc.teamcode.subsytems.RobotConstants;
@@ -35,8 +34,8 @@ public class mainOpMode extends CommandOpMode {
         driveBase = new DriveBase(hardwareMap);
         driveBase.setDefaultCommand(new RunCommand(()->driveBase.manual(driver.getLeftY(), driver.getLeftX(), driver.getRightX()),driveBase));
         driver.getGamepadButton(GamepadKeys.Button.A).whenPressed(driveBase.driveTo(new Pose(10,5,Math.toRadians(Math.PI))));
-        driver.getGamepadButton(GamepadKeys.Button.B).whenPressed(new shootSequence(shooter,intake));
-        driver.getGamepadButton(GamepadKeys.Button.RIGHT_BUMPER).toggleWhenPressed(intake.runIntake(RobotConstants.intakeConstants.intakePower, RobotConstants.intakeConstants.transitionPower),intake.stopIntake());
+        driver.getGamepadButton(GamepadKeys.Button.LEFT_BUMPER).toggleWhenPressed(intake.runIntake(RobotConstants.intakeConstants.intakePower, RobotConstants.intakeConstants.transitionPower),intake.stopIntake());
+        driver.getGamepadButton(GamepadKeys.Button.RIGHT_BUMPER).whenPressed(shooter.shootSequence(intake));
     }
 
     @Override
