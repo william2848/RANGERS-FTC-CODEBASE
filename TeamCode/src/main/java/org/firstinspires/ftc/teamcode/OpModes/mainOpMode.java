@@ -26,7 +26,7 @@ public class mainOpMode extends CommandOpMode {
 
     @Override
     public void initialize() {
-        //balls
+    //768
         telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
         intake = new Intake(hardwareMap);
         shooter = new Shooter(hardwareMap);
