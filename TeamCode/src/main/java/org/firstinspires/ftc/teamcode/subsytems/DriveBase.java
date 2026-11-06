@@ -8,11 +8,17 @@ import com.pedropathing.math.Pose;
 import com.pedropathing.paths.Path;
 import com.pedropathing.paths.curves.Line;
 import com.qualcomm.robotcore.hardware.HardwareMap;
+import com.seattlesolvers.solverslib.command.Command;
+import com.seattlesolvers.solverslib.command.DeferredCommand;
 import com.seattlesolvers.solverslib.command.RunCommand;
+import com.seattlesolvers.solverslib.command.Subsystem;
 import com.seattlesolvers.solverslib.command.SubsystemBase;
 import com.seattlesolvers.solverslib.pedroCommand.FollowPathCommand;
 
 import org.firstinspires.ftc.teamcode.pedro.Constants;
+
+import java.util.Collections;
+import java.util.Set;
 
 public class DriveBase extends SubsystemBase {
     private Follower follower;
@@ -20,24 +26,35 @@ public class DriveBase extends SubsystemBase {
 
     public DriveBase(HardwareMap hardwareMap) {
         follower = Constants.create(hardwareMap);
-        register();
+        //register();
+
+
     }
 
     public void manual(double forward, double lateral, double turn){
-        follower.manual(forward, lateral, turn);
+        follower.manual(forward, -lateral, -turn);
     }
     public void periodic(){
         follower.update();
     }
-    public Pose getPose(){return follower.pose();}
 
     private Path getPath(Pose target){
         return line(follower.pose(),target).linear(follower.pose(),target);
     }
 
-    public FollowPathCommand driveTo(Pose target){
-        return new FollowPathCommand(follower, getPath(target)); //apparently this doesn't work, it sets mode to FOLLOW, but because it gives no arguments it cannot override the default command, which it must because they both affect drive base. so the default command resets the mode to MANUAL every iteration.
+
+
+    public Command driveTo(Pose target){
+        return new DeferredCommand(
+                ()-> new FollowPathCommand(follower, getPath(target)),
+                Collections.<Subsystem>singletonList(this)
+                );
     }
+
+    public void setStartingPose(Pose pose){
+        follower.setPose(pose);
+    }
+    public Pose getPose() { return follower.pose(); }
 
 
 

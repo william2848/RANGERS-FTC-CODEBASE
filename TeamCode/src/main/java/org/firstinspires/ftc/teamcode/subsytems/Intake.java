@@ -1,25 +1,42 @@
 package org.firstinspires.ftc.teamcode.subsytems;
 
-import com.qualcomm.robotcore.hardware.DcMotorEx;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
+import static com.seattlesolvers.solverslib.hardware.motors.Motor.ZeroPowerBehavior.FLOAT;
+
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.seattlesolvers.solverslib.command.Command;
 import com.seattlesolvers.solverslib.command.InstantCommand;
 import com.seattlesolvers.solverslib.command.SubsystemBase;
+import com.seattlesolvers.solverslib.hardware.motors.Motor;
 
 public class Intake extends SubsystemBase {
-    private DcMotorEx intake;
-    private DcMotorEx transfer;
+
+    private final Motor intake;
+    private final Motor transition;
+
     public Intake(HardwareMap hardwareMap){
-        this.intake = hardwareMap.get(DcMotorEx.class, "intake");
-        this.intake.setDirection(DcMotorSimple.Direction.FORWARD);
-        this.transfer = hardwareMap.get(DcMotorEx.class,"transfer");
-        this.transfer.setDirection(DcMotorSimple.Direction.FORWARD);
+        intake = new Motor(hardwareMap,"intake");
+        transition = new Motor(hardwareMap, "transition");
+        intake.setRunMode(Motor.RunMode.RawPower);
+        transition.setRunMode(Motor.RunMode.RawPower);
+        intake.setZeroPowerBehavior(FLOAT);
+        transition.setZeroPowerBehavior(FLOAT);
         register();
     }
-    public void idle(){this.transfer.setVelocity(Constants.intakeConstants.idleTransfer);}
-    public void runTransfer(double velocity){this.transfer.setVelocity(velocity);}
-    public Command runIntake(double intakeVelocity, double transferVelocity){return new InstantCommand(()->{this.intake.setVelocity(intakeVelocity); this.transfer.setVelocity(transferVelocity);},this);}
-    public Command stopIntake(){return new InstantCommand(()->{this.intake.setVelocity(0);this.idle();},this);}
+
+    public void setIntakeAndTransition(double intake, double transition){
+        this.intake.set(-intake);
+        this.transition.set(-transition);
+    }
+
+    public void setTransitionOnly(double power){
+        setIntakeAndTransition(0,power);
+    }
+
+    public void stop(){
+        setIntakeAndTransition(0,0);
+    }
+
+    public Command runIntake(double intakePower, double transitionPower){return new InstantCommand(()->setIntakeAndTransition(intakePower, transitionPower),this);}
+    public Command stopIntake(){return new InstantCommand(this::stop,this);}
 
 }
