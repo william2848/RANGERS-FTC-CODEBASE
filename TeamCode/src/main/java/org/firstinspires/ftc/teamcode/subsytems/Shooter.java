@@ -4,7 +4,12 @@ import static com.seattlesolvers.solverslib.hardware.motors.Motor.ZeroPowerBehav
 
 import com.qualcomm.robotcore.hardware.HardwareMap;
 //import com.qualcomm.robotcore.hardware.Servo;
+import com.seattlesolvers.solverslib.command.Command;
+import com.seattlesolvers.solverslib.command.InstantCommand;
+import com.seattlesolvers.solverslib.command.SequentialCommandGroup;
 import com.seattlesolvers.solverslib.command.SubsystemBase;
+import com.seattlesolvers.solverslib.command.WaitCommand;
+import com.seattlesolvers.solverslib.command.WaitUntilCommand;
 import com.seattlesolvers.solverslib.hardware.motors.Motor;
 import com.seattlesolvers.solverslib.hardware.motors.MotorGroup;
 
@@ -100,6 +105,15 @@ public class Shooter extends SubsystemBase {
         double target = getTargetTicksPerSec();
         return target > 0 && Math.abs(getLeftVelocity() - target) < target *.05;
 
+    }
+    public Command shootSequence(Intake intake){
+        return  new SequentialCommandGroup(
+                new InstantCommand(this::shoot),
+                new WaitUntilCommand(()->this.targetVelocity(this.getTargetTicksPerSec())),
+                new InstantCommand(()->intake.setTransitionOnly(RobotConstants.intakeConstants.transitionPower)),
+                new InstantCommand(this::openBreaker),
+                new WaitCommand(RobotConstants.otherConstants.waitForEmpty)
+        ).whenFinished(()->{this.end(); intake.stop();});
     }
 
     @Override
