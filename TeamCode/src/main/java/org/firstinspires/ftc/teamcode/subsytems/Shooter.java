@@ -30,7 +30,10 @@ public class Shooter extends SubsystemBase {
         leftShooter = new Motor(hardwareMap, "leftShooter",
                 RobotConstants.shooterConstants.CLICKS_PER_REV,
                 RobotConstants.shooterConstants.MAX_HD_HEX);
+        leftShooter.setInverted(true);
         shooterMotors = new MotorGroup(leftShooter, rightShooter);
+
+        shooterMotors.setRunMode(Motor.RunMode.VelocityControl);
 
         shooterMotors.setVeloCoefficients(
                 RobotConstants.shooterConstants.kP,
@@ -39,7 +42,6 @@ public class Shooter extends SubsystemBase {
         shooterMotors.setFeedforwardCoefficients(
                 RobotConstants.shooterConstants.kS,
                 RobotConstants.shooterConstants.kV);
-        shooterMotors.setRunMode(Motor.RunMode.VelocityControl);
         shooterMotors.setZeroPowerBehavior(FLOAT);
 //        this.breakerLeft = hardwareMap.get(Servo.class, "breakerLeft");
 //        this.breakerRight = hardwareMap.get(Servo.class, "breakerRight");
@@ -119,6 +121,8 @@ public class Shooter extends SubsystemBase {
     @Override
     public void periodic(){
        ;//we need to set S and V Value
+        updateCoefficiants();
+
         shooterMotors.set(currentPercent);
 
 

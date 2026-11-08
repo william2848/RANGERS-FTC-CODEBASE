@@ -5,6 +5,7 @@ import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.pedropathing.math.Pose;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.seattlesolvers.solverslib.command.CommandOpMode;
+import com.seattlesolvers.solverslib.command.InstantCommand;
 import com.seattlesolvers.solverslib.command.RunCommand;
 import com.seattlesolvers.solverslib.gamepad.GamepadEx;
 import com.seattlesolvers.solverslib.gamepad.GamepadKeys;
@@ -33,9 +34,17 @@ public class mainOpMode extends CommandOpMode {
         driver = new GamepadEx(gamepad1);
         driveBase = new DriveBase(hardwareMap);
         driveBase.setDefaultCommand(new RunCommand(()->driveBase.manual(driver.getLeftY(), driver.getLeftX(), driver.getRightX()),driveBase));
-        driver.getGamepadButton(GamepadKeys.Button.A).whenPressed(driveBase.driveTo(new Pose(10,5,Math.toRadians(Math.PI))));
-        driver.getGamepadButton(GamepadKeys.Button.LEFT_BUMPER).toggleWhenPressed(intake.runIntake(RobotConstants.intakeConstants.intakePower, RobotConstants.intakeConstants.transitionPower),intake.stopIntake());
-        driver.getGamepadButton(GamepadKeys.Button.RIGHT_BUMPER).whenPressed(shooter.shootSequence(intake));
+        driver.getGamepadButton(GamepadKeys.Button.RIGHT_BUMPER)
+                .whenPressed(new InstantCommand(() -> shooter.shoot()))
+                .whenReleased(new InstantCommand(() -> shooter.stop()));
+
+        driver.getGamepadButton(GamepadKeys.Button.LEFT_BUMPER)
+                .whenPressed(new InstantCommand(() -> intake.setIntakeAndTransition(0.8, -0.8)))
+                .whenReleased(new InstantCommand(() -> intake.stop()));
+
+        driver.getGamepadButton(GamepadKeys.Button.A)
+                .whenPressed(new InstantCommand(() -> intake.setTransitionOnly(0.8)))
+                .whenReleased(new InstantCommand(() -> intake.stop()));
     }
 
     @Override

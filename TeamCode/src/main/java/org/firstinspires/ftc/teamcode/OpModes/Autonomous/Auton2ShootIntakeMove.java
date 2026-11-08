@@ -4,6 +4,7 @@ import com.pedropathing.math.Pose;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.seattlesolvers.solverslib.command.CommandOpMode;
 import com.seattlesolvers.solverslib.command.InstantCommand;
+import com.seattlesolvers.solverslib.command.ParallelCommandGroup;
 import com.seattlesolvers.solverslib.command.SequentialCommandGroup;
 import com.seattlesolvers.solverslib.command.WaitUntilCommand;
 
@@ -26,17 +27,13 @@ public class Auton2ShootIntakeMove extends CommandOpMode {
         driveBase = new DriveBase(hardwareMap);
         driveBase.setStartingPose(new Pose(0,0,0));
         shooter = new Shooter(hardwareMap);
+        intake = new Intake(hardwareMap);
         // shooter.register(); add if not working
         driveBase.register();
 
 
+        //Shoot from start Pos and Move to Intake
 
-        schedule(new SequentialCommandGroup(
-                new InstantCommand(shooter::shoot),
-                new WaitUntilCommand(shooter::isAtSpeed).withTimeout(3000),
-                driveBase.driveTo(new Pose(0,35,0)),
-                driveBase.driveTo(new Pose(79,46,0))
-        ));
     }
 
     public void run(){
