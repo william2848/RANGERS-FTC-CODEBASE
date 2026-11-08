@@ -36,9 +36,10 @@ public class ExampleAuto extends OpMode {
 
     private final Pose secondShootPose = p.of(57.43,134.09,270);
     private final Pose secondControlPose = p.of(20,100,270);
+    private final Pose parkControlPose = p.of(53.07,101.16,270);
 
     private Path park(){
-        return curve(startPose,controlPose,park).linear(startPose,park);
+        return curve(secondShootPose,parkControlPose,park).linear(secondShootPose,park);
     }
     private Path toSecondShoot(){
         return curve(intakePose,secondControlPose,secondShootPose).linear(intakePose,secondShootPose);
@@ -46,11 +47,13 @@ public class ExampleAuto extends OpMode {
     private Path gardenIntake(){
         return curve(startPose,controlPose,intakePose).linear(startPose,intakePose);
     }
+
     private Command shootStationary(){
         return sequential(
                 instant(() -> shooter.shoot()),
+                waitMs(3000),
                 instant(() ->intake.setTransitionOnly(0.8)),
-                waitMs(4000),//wait 4 secs for shooter to spin up and unload
+                waitMs(3000),
                 instant(() -> shooter.stop()),
                 instant(() -> intake.stop()));
     }
@@ -61,10 +64,13 @@ public class ExampleAuto extends OpMode {
                 parallel(
                 follow(follower,gardenIntake()),
                 instant(() -> intake.setIntakeAndTransition(0.8,0.8)
-                        ),
+                        )),
                 instant(() -> intake.stop()),
+
+                follow(follower,toSecondShoot()),
+                shootStationary(),
                 follow(follower,park())
-        ));
+        );
     }
 
     @Override
