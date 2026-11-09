@@ -70,11 +70,15 @@ public class Shooter extends SubsystemBase {
 
 
     public boolean isAtSpeed(){return(shooterMotors.getVelocity()/RobotConstants.shooterConstants.MAXVel>=(RobotConstants.shooterConstants.TARGETVelPercent));}
-    public Command shootSequence(Intake intake, GamepadEx driver){
+    public Command shootSequence(Intake intake, GamepadEx driver, Lightbar lightbar){
         return  new SequentialCommandGroup(
+                new InstantCommand(lightbar::red),
                 new InstantCommand(this::shoot),
                 new WaitUntilCommand(this::isAtSpeed),
+                new InstantCommand(lightbar::green),
+                new WaitUntilCommand(()-> driver.getTrigger(GamepadKeys.Trigger.RIGHT_TRIGGER)>=0.8),
                 new InstantCommand(()->intake.setTransitionOnly(RobotConstants.intakeConstants.transitionPower)),
+                new InstantCommand(lightbar::red),
                 new WaitCommand(RobotConstants.otherConstants.waitForEmpty)
         ).interruptOn(()->driver.wasJustPressed(GamepadKeys.Button.RIGHT_BUMPER)).whenFinished(()->{this.end(); intake.setIntakeAndTransition(0,0);});
     }
