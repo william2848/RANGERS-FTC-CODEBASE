@@ -16,7 +16,7 @@ public class ShooterTune extends CommandOpMode {
     @Override
     public void initialize() {
         telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
-        shooter = new Shooter(hardwareMap);
+        shooter = new Shooter(hardwareMap,telemetry);
     }
 
     @Override
@@ -25,14 +25,12 @@ public class ShooterTune extends CommandOpMode {
 
         shooter.updateCoefficiants();   // picks up Dashboard edits
         if (gamepad1.a) {
-            shooter.shoot();            // re-reads TARGET_RPM
+            shooter.shootMax();            // re-reads TARGET_RPM
         } else {
             shooter.stop();
         }
 
-        telemetry.addData("target (ticks/s)", shooter.getTargetTicksPerSec());
-        telemetry.addData("left velocity", shooter.getLeftVelocity());
-        telemetry.addData("right velocity", shooter.getRightVelocity());
+        telemetry.addData("Velocity",shooter.getVelocity());
         telemetry.addData("kP live", RobotConstants.shooterConstants.kP);
         telemetry.addData("kV live", RobotConstants.shooterConstants.kV);
         telemetry.update();

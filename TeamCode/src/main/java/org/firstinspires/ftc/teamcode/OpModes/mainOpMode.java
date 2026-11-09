@@ -28,14 +28,14 @@ public class mainOpMode extends CommandOpMode {
 
         telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
         intake = new Intake(hardwareMap);
-        shooter = new Shooter(hardwareMap);
+        shooter = new Shooter(hardwareMap,telemetry);
         operator = new GamepadEx(gamepad2);
         driver = new GamepadEx(gamepad1);
         driveBase = new DriveBase(hardwareMap);
         driveBase.setDefaultCommand(new RunCommand(()->driveBase.manual(driver.getLeftY(), driver.getLeftX(), driver.getRightX()),driveBase));
         driver.getGamepadButton(GamepadKeys.Button.A).whenPressed(driveBase.driveTo(new Pose(10,5,Math.toRadians(Math.PI))));
-        driver.getGamepadButton(GamepadKeys.Button.LEFT_BUMPER).toggleWhenPressed(intake.runIntake(RobotConstants.intakeConstants.intakePower, RobotConstants.intakeConstants.transitionPower),intake.stopIntake());
-        driver.getGamepadButton(GamepadKeys.Button.RIGHT_BUMPER).whenPressed(shooter.shootSequence(intake));
+        driver.getGamepadButton(GamepadKeys.Button.LEFT_BUMPER).whenPressed(intake.runIntake(RobotConstants.intakeConstants.intakePower, RobotConstants.intakeConstants.transitionPower)).whenReleased(intake.stop());
+        driver.getGamepadButton(GamepadKeys.Button.RIGHT_BUMPER).whenPressed(shooter.shootSequence(intake, driver));
     }
 
     @Override
@@ -64,9 +64,6 @@ public class mainOpMode extends CommandOpMode {
         telemetry.addData("PosY", driveBase.getPose().y());
         telemetry.addData("Rotation",driveBase.getPose().heading());
         // Telemetry (also graphed on the Dashboard)
-        telemetry.addData("Target (ticks/Sec):", shooter.getTargetTicksPerSec());
-        telemetry.addData("Right (Ticks/Sec):", shooter.getRightVelocity());
-        telemetry.addData("Left (Ticks/Sec):", shooter.getLeftVelocity());
         telemetry.update();
     }
 }

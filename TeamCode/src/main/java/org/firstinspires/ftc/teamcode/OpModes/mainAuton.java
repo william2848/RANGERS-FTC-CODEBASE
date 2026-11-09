@@ -31,7 +31,7 @@ import org.firstinspires.ftc.teamcode.subsytems.Shooter;
             super.reset();
           driveBase = new DriveBase(hardwareMap);
           driveBase.setStartingPose(new Pose(0,0,0));
-          shooterSubsystem = new Shooter(hardwareMap);
+          shooterSubsystem = new Shooter(hardwareMap, telemetry);
          // shooterSubsystem.register(); add if not working
             driveBase.register();
 
