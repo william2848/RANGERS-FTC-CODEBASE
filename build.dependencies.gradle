@@ -16,9 +16,11 @@ dependencies {
     implementation 'org.firstinspires.ftc:Vision:12.0.0'
     implementation 'androidx.appcompat:appcompat:1.2.0'
     implementation 'com.acmerobotics.dashboard:dashboard:0.6.0'
-
+    implementation 'com.pedropathing.ivy:pedro:1.1.1'
     implementation 'com.pedropathing:revhub:3.0.1'
+
     if (project.findProperty('pedroTuning')?.toString()?.toBoolean()) {
         implementation 'com.pedropathing:tuning:1.0.1' // brings in Sloth, see gradle.properties
+
     }
 }

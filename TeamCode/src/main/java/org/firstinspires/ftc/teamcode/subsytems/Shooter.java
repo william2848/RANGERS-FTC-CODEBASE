@@ -36,6 +36,17 @@ public class Shooter extends SubsystemBase {
         telemetry = shooterTelemetry;
         register();
     }
+    public Shooter(HardwareMap hardwareMap){
+        rightShooter = new MotorEx(hardwareMap, "rightShooter", RobotConstants.shooterConstants.CLICKS_PER_REV, RobotConstants.shooterConstants.MAX_HD_HEX);
+        leftShooter = new MotorEx(hardwareMap, "leftShooter", RobotConstants.shooterConstants.CLICKS_PER_REV, RobotConstants.shooterConstants.MAX_HD_HEX);
+        shooterMotors = new MotorGroup(leftShooter, rightShooter);
+        shooterMotors.setVeloCoefficients(RobotConstants.shooterConstants.kP, RobotConstants.shooterConstants.kI, RobotConstants.shooterConstants.kD);//Set PID Value
+        shooterMotors.setFeedforwardCoefficients(RobotConstants.shooterConstants.kS, RobotConstants.shooterConstants.kV);
+        shooterMotors.setRunMode(Motor.RunMode.VelocityControl);
+        shooterMotors.setZeroPowerBehavior(FLOAT);
+
+        register();
+    }
 
 
     public void updateCoefficiants(){
