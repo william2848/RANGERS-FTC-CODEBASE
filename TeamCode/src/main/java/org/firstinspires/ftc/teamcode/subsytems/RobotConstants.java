@@ -11,7 +11,7 @@ public class RobotConstants {
 
         public static final double CLICKS_PER_REV = 28;
         public static double MAXVel = 6000;
-        public static  double kP = 0;
+        public static  double kP = 30;
         public static  double kI = 0;
         public static  double kD = 0;
         public static  double kS = 0;
@@ -23,7 +23,7 @@ public class RobotConstants {
 
     public static class intakeConstants {
         public static double intakePower = 0.8;
-        public static double transitionPower = 0.8;
+        public static double transitionPower = -0.8;
     }
     public static class otherConstants{
         public static long waitForEmpty = 2000;
