@@ -87,7 +87,7 @@ public class ShootThenMove extends OpMode {
         telemetry.addData("Y", follower.pose().y());
         telemetry.addData("Heading", Math.toDegrees(follower.pose().heading()));
         telemetry.addData("Follower Mode", follower.mode());
-        telemetry.addData("Current Shooter Velocity(t/s):", shooter.getLeftVelocity());
+        telemetry.addData("Current Shooter Velocity(t/s):", shooter.getVelocity());
         telemetry.update();
 
     }

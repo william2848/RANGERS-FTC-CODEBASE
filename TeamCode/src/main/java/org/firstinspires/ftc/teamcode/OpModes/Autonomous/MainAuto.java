@@ -31,7 +31,7 @@ public class MainAuto extends OpMode {
     private Intake intake;
     private Shooter shooter;
     private final PoseFactory p = PoseFactory.degrees();
-    private final Pose startPose = p.of(60,9,90);
+    private final Pose startPose = p.of(56,36,90);
     private final Pose park = p.of(12,108,90);
     private final Pose controlPose = p.of(17.03,40,90);
     private final Pose intakePose = p.of(7,6,270);
