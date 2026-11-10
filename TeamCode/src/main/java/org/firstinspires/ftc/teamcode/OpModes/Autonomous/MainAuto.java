@@ -5,6 +5,7 @@ import static com.pedropathing.api.Paths.line;
 import com.pedropathing.api.PoseFactory;
 import com.pedropathing.follower.Follower;
 import com.pedropathing.math.Pose;
+import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import static com.pedropathing.api.Paths.*;
 import com.pedropathing.paths.Path;
@@ -23,7 +24,8 @@ import static com.pedropathing.ivy.groups.Groups.sequential;
 import static com.pedropathing.ivy.pedro.PedroCommands.follow;
 
 
-public class ExampleAuto extends OpMode {
+@Autonomous(name = "MainAuto")
+public class MainAuto extends OpMode {
 
     private Follower follower;
     private Intake intake;
@@ -41,6 +43,7 @@ public class ExampleAuto extends OpMode {
     private Path park(){
         return curve(secondShootPose,parkControlPose,park).linear(secondShootPose,park);
     }
+
     private Path toSecondShoot(){
         return curve(intakePose,secondControlPose,secondShootPose).linear(intakePose,secondShootPose);
     }
@@ -48,12 +51,13 @@ public class ExampleAuto extends OpMode {
         return curve(startPose,controlPose,intakePose).linear(startPose,intakePose);
     }
 
+
     private Command shootStationary(){
         return sequential(
                 instant(() -> shooter.shoot()),
                 waitMs(3000),
                 instant(() ->intake.setTransitionOnly(0.8)),
-                waitMs(3000),
+                waitMs(2500),
                 instant(() -> shooter.stop()),
                 instant(() -> intake.stop()));
     }
@@ -63,13 +67,17 @@ public class ExampleAuto extends OpMode {
                 shootStationary(),
                 parallel(
                 follow(follower,gardenIntake()),
-                instant(() -> intake.setIntakeAndTransition(0.8,0.8)
+                instant(() -> intake.setIntakeAndTransition(0.8,-0.8)
                         )),
                 instant(() -> intake.stop()),
 
                 follow(follower,toSecondShoot()),
                 shootStationary(),
                 follow(follower,park())
+                //sequential -> run one after anohter
+                //parallel-> run all at once
+                //instant-> run the command
+
         );
     }
 

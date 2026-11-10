@@ -5,6 +5,7 @@ import static com.pedropathing.api.Paths.line;
 import com.pedropathing.api.PoseFactory;
 import com.pedropathing.follower.Follower;
 import com.pedropathing.math.Pose;
+import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import static com.pedropathing.api.Paths.*;
 import com.pedropathing.paths.Path;
@@ -23,6 +24,7 @@ import static com.pedropathing.ivy.groups.Groups.sequential;
 import static com.pedropathing.ivy.pedro.PedroCommands.follow;
 
 
+@Autonomous(name = "ShootThenMove")
 public class ShootThenMove extends OpMode {
 
     private Follower follower;
@@ -46,6 +48,7 @@ public class ShootThenMove extends OpMode {
         return sequential(
                 instant(() -> shooter.shoot()),
                 waitMs(3000),
+
                 instant(() ->intake.setTransitionOnly(0.8)),
                 waitMs(3000),
                 instant(() -> shooter.stop()),
@@ -84,6 +87,7 @@ public class ShootThenMove extends OpMode {
         telemetry.addData("Y", follower.pose().y());
         telemetry.addData("Heading", Math.toDegrees(follower.pose().heading()));
         telemetry.addData("Follower Mode", follower.mode());
+        telemetry.addData("Current Shooter Velocity(t/s):", shooter.getLeftVelocity());
         telemetry.update();
 
     }

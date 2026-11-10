@@ -73,9 +73,9 @@ public class mainOpMode extends CommandOpMode {
         telemetry.addData("PosY", driveBase.getPose().y());
         telemetry.addData("Rotation",driveBase.getPose().heading());
         // Telemetry (also graphed on the Dashboard)
-        telemetry.addData("Target (ticks/Sec):", shooter.getTargetTicksPerSec());
-        telemetry.addData("Right (Ticks/Sec):", shooter.getRightVelocity());
-        telemetry.addData("Left (Ticks/Sec):", shooter.getLeftVelocity());
+        telemetry.addData("Target (t/Sec):", shooter.getTargetTicksPerSec());
+        telemetry.addData("Right (t/Sec):", shooter.getRightVelocity());
+        telemetry.addData("Left (t/Sec):", shooter.getLeftVelocity());
         telemetry.update();
     }
 }
