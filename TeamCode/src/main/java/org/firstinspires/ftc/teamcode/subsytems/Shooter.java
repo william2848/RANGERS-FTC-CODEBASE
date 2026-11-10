@@ -10,63 +10,45 @@ import com.seattlesolvers.solverslib.command.SequentialCommandGroup;
 import com.seattlesolvers.solverslib.command.SubsystemBase;
 import com.seattlesolvers.solverslib.command.WaitCommand;
 import com.seattlesolvers.solverslib.command.WaitUntilCommand;
+import com.seattlesolvers.solverslib.gamepad.GamepadEx;
+import com.seattlesolvers.solverslib.gamepad.GamepadKeys;
 import com.seattlesolvers.solverslib.hardware.motors.Motor;
+import com.seattlesolvers.solverslib.hardware.motors.MotorEx;
 import com.seattlesolvers.solverslib.hardware.motors.MotorGroup;
-
+import org.firstinspires.ftc.robotcore.external.Telemetry;
 
 public class Shooter extends SubsystemBase {
 
-  private final Motor rightShooter;
-    private double currentPercent = 0;
-  private final Motor leftShooter;
+  private final MotorEx rightShooter;
+    private double setpoint;
+  private final MotorEx leftShooter;
   private final MotorGroup shooterMotors;
-//private final Servo breakerLeft;
-//private final Servo breakerRight;
+  private Telemetry telemetry;
 
-    public Shooter(HardwareMap hardwareMap){
-        rightShooter = new Motor(hardwareMap, "rightShooter",
-                RobotConstants.shooterConstants.CLICKS_PER_REV,
-                RobotConstants.shooterConstants.MAX_HD_HEX);
-        leftShooter = new Motor(hardwareMap, "leftShooter",
-                RobotConstants.shooterConstants.CLICKS_PER_REV,
-                RobotConstants.shooterConstants.MAX_HD_HEX);
-        leftShooter.setInverted(true);
+    public Shooter(HardwareMap hardwareMap, Telemetry shooterTelemetry){
+        rightShooter = new MotorEx(hardwareMap, "rightShooter", RobotConstants.shooterConstants.CLICKS_PER_REV, RobotConstants.shooterConstants.MAX_HD_HEX);
+        leftShooter = new MotorEx(hardwareMap, "leftShooter", RobotConstants.shooterConstants.CLICKS_PER_REV, RobotConstants.shooterConstants.MAX_HD_HEX);
         shooterMotors = new MotorGroup(leftShooter, rightShooter);
-
+        shooterMotors.setVeloCoefficients(RobotConstants.shooterConstants.kP, RobotConstants.shooterConstants.kI, RobotConstants.shooterConstants.kD);//Set PID Value
+        shooterMotors.setFeedforwardCoefficients(RobotConstants.shooterConstants.kS, RobotConstants.shooterConstants.kV);
         shooterMotors.setRunMode(Motor.RunMode.VelocityControl);
-
-        shooterMotors.setVeloCoefficients(
-                RobotConstants.shooterConstants.kP,
-                RobotConstants.shooterConstants.kI,
-                RobotConstants.shooterConstants.kD);//Set PID Value
-        shooterMotors.setFeedforwardCoefficients(
-                RobotConstants.shooterConstants.kS,
-                RobotConstants.shooterConstants.kV);
         shooterMotors.setZeroPowerBehavior(FLOAT);
-//        this.breakerLeft = hardwareMap.get(Servo.class, "breakerLeft");
-//        this.breakerRight = hardwareMap.get(Servo.class, "breakerRight");
-//        this.breakerLeft.setDirection(Servo.Direction.FORWARD);
-//        this.breakerRight.setDirection(Servo.Direction.REVERSE);
+        telemetry = shooterTelemetry;
+        register();
+    }
+    public Shooter(HardwareMap hardwareMap){
+        rightShooter = new MotorEx(hardwareMap, "rightShooter", RobotConstants.shooterConstants.CLICKS_PER_REV, RobotConstants.shooterConstants.MAX_HD_HEX);
+        leftShooter = new MotorEx(hardwareMap, "leftShooter", RobotConstants.shooterConstants.CLICKS_PER_REV, RobotConstants.shooterConstants.MAX_HD_HEX);
+        shooterMotors = new MotorGroup(leftShooter, rightShooter);
+        shooterMotors.setVeloCoefficients(RobotConstants.shooterConstants.kP, RobotConstants.shooterConstants.kI, RobotConstants.shooterConstants.kD);//Set PID Value
+        shooterMotors.setFeedforwardCoefficients(RobotConstants.shooterConstants.kS, RobotConstants.shooterConstants.kV);
+        shooterMotors.setRunMode(Motor.RunMode.VelocityControl);
+        shooterMotors.setZeroPowerBehavior(FLOAT);
+
         register();
     }
 
-    public double getTargetVelocity() {
-        return currentPercent;
-    }//access
 
-    public double getLeftVelocity(){
-        return Math.abs(leftShooter.getCorrectedVelocity());
-    }
-    public double getRightVelocity(){
-        return Math.abs(rightShooter.getCorrectedVelocity());
-    }
-
-    public double getTargetTicksPerSec(){
-        return currentPercent *
-               RobotConstants.shooterConstants.MAX_HD_HEX *
-               RobotConstants.shooterConstants.CLICKS_PER_REV / 60.0;
-
-    }
     public void updateCoefficiants(){
         shooterMotors.setVeloCoefficients(
                 RobotConstants.shooterConstants.kP,
@@ -76,54 +58,35 @@ public class Shooter extends SubsystemBase {
                 RobotConstants.shooterConstants.kS,
                 RobotConstants.shooterConstants.kV);
     }
-    public void shoot(){
-        this.currentPercent =
-                RobotConstants.shooterConstants.TARGET_RPM /
-                RobotConstants.shooterConstants.MAX_HD_HEX;
-    }
+    public void shootMax(){shooterMotors.set(1);}
+    public void shoot(){shooterMotors.set(RobotConstants.shooterConstants.TARGETVelPercent);}
 
-    public void stop(){
-    currentPercent = 0;
-    }
+    public Command shootCommand(){return new InstantCommand(this::shoot);}
+    public Command stopCommand(){return new InstantCommand(this::shoot);}
+    public void stop(){shooterMotors.set(0);}
 
-    public void openBreaker(){
-//        breakerLeft.setPosition(RobotConstants.shooterConstants.breakerOpenPos);
-//        breakerRight.setPosition(RobotConstants.shooterConstants.breakerOpenPos);
-    }
-    public void closeBreaker(){
-//        breakerLeft.setPosition(RobotConstants.shooterConstants.breakerClosePos);
-//        breakerRight.setPosition(RobotConstants.shooterConstants.breakerClosePos);
-    }
-    public void end(){
-        stop();
-//        breakerLeft.setPosition(RobotConstants.shooterConstants.breakerClosePos);
-//        breakerRight.setPosition(RobotConstants.shooterConstants.breakerClosePos);
-    }
-    public double velocity(){return (getLeftVelocity()+getRightVelocity())/2;}
+    public void end(){stop();}
+    public double getVelocity(){return shooterMotors.getVelocity();}
 
-    public boolean targetVelocity(double target){return(Math.abs(velocity())>=Math.abs(target));}
 
-    public boolean isAtSpeed(){
-        double target = getTargetTicksPerSec();
-        return target > 0 && Math.abs(getLeftVelocity() - target) < target *.05;
-
-    }
-    public Command shootSequence(Intake intake){
+    public boolean isAtSpeed(){return(shooterMotors.getVelocity()/RobotConstants.shooterConstants.MAXVel>=(RobotConstants.shooterConstants.TARGETVelPercent));}
+    public Command shootSequence(Intake intake, GamepadEx driver, Lightbar lightbar){
         return  new SequentialCommandGroup(
+                new InstantCommand(lightbar::red),
                 new InstantCommand(this::shoot),
-                new WaitUntilCommand(()->this.targetVelocity(this.getTargetTicksPerSec())),
+                new WaitUntilCommand(this::isAtSpeed),
+                new InstantCommand(lightbar::green),
+                new WaitUntilCommand(()-> driver.getTrigger(GamepadKeys.Trigger.RIGHT_TRIGGER)>=0.8),
                 new InstantCommand(()->intake.setTransitionOnly(RobotConstants.intakeConstants.transitionPower)),
-                new InstantCommand(this::openBreaker),
+                new InstantCommand(lightbar::red),
                 new WaitCommand(RobotConstants.otherConstants.waitForEmpty)
-        ).whenFinished(()->{this.end(); intake.stop();});
+        ).interruptOn(()->driver.wasJustPressed(GamepadKeys.Button.RIGHT_BUMPER)).whenFinished(()->{this.end(); intake.setIntakeAndTransition(0,0);});
     }
 
     @Override
     public void periodic(){
        ;//we need to set S and V Value
-        updateCoefficiants();
-
-        shooterMotors.set(currentPercent);
+        telemetry.addData("Shooter Velocity", this.getVelocity());
 
 
     }
