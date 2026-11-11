@@ -6,16 +6,20 @@ public class RobotConstants {
     @Config
     public static class shooterConstants {
         public static final double MAX_HD_HEX = 6000;
-        public static double TARGET_RPM = 1300;
+        public static double TARGET_RPM = 1100;
+
+        public static double TARGET_TICKS = TARGET_RPM * 28 / 60;
 
         public static final double CLICKS_PER_REV = 28;
+        public static double SPEED_TOLERANCE_RPM = 50;
 
 
-        public static  double kP = 30;//18
+
+        public static  double kP = 45;
         public static  double kI = 0;
         public static  double kD = 0;
         public static  double kS = 0;
-        public static  double kV = 5;//5
+        public static  double kV = 9;
 
         static double breakerOpenPos = 1;//tune this
         static double breakerClosePos = 0; //tune this

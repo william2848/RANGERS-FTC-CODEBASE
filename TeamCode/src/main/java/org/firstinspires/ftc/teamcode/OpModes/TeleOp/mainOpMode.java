@@ -34,16 +34,22 @@ public class mainOpMode extends CommandOpMode {
         driver = new GamepadEx(gamepad1);
         driveBase = new DriveBase(hardwareMap);
         driveBase.setDefaultCommand(new RunCommand(()->driveBase.manual(driver.getLeftY(), driver.getLeftX(), driver.getRightX()),driveBase));
+
         driver.getGamepadButton(GamepadKeys.Button.RIGHT_BUMPER)
                 .whenPressed(new InstantCommand(() -> shooter.shoot()))
-                .whenReleased(new InstantCommand(() -> shooter.stop()));
+//                .whileHeld(new RunCommand(() ->
+//                      intake.setTransitionOnly(shooter.isAtSpeed() ? -1 : 0)))
+                .whenReleased(new InstantCommand(() -> {
+                    shooter.stop();
+                    intake.stop();
+                }));
 
         driver.getGamepadButton(GamepadKeys.Button.LEFT_BUMPER)
-                .whenPressed(new InstantCommand(() -> intake.setIntakeAndTransition(0.8, -0.8)))
+                .whenPressed(new InstantCommand(() -> intake.setIntakeAndTransition(0.8, -1)))
                 .whenReleased(new InstantCommand(() -> intake.stop()));
 
         driver.getGamepadButton(GamepadKeys.Button.A)
-                .whenPressed(new InstantCommand(() -> intake.setTransitionOnly(0.8)))
+                .whenPressed(new InstantCommand(() -> intake.setTransitionOnly(1)))
                 .whenReleased(new InstantCommand(() -> intake.stop()));
     }
 
@@ -73,9 +79,15 @@ public class mainOpMode extends CommandOpMode {
         telemetry.addData("PosY", driveBase.getPose().y());
         telemetry.addData("Rotation",driveBase.getPose().heading());
         // Telemetry (also graphed on the Dashboard)
-        telemetry.addData("Target (ticks/Sec):", shooter.getTargetTicksPerSec());
-        telemetry.addData("Right (Ticks/Sec):", shooter.getRightVelocity());
-        telemetry.addData("Left (Ticks/Sec):", shooter.getLeftVelocity());
+        telemetry.addData("Target RPM", shooter.getTargetRPM());
+        telemetry.addData("Right RPM", shooter.getRightRPM());
+        telemetry.addData("Left RPM", shooter.getLeftRPM());
+        telemetry.addData("At Speed", shooter.isAtSpeed());
+        telemetry.addData("kP", RobotConstants.shooterConstants.kP);
+        telemetry.addData("kI",RobotConstants.shooterConstants.kI);
+        telemetry.addData("kD",RobotConstants.shooterConstants.kD);
+        telemetry.addData("kV", RobotConstants.shooterConstants.kV);
+        telemetry.addData("Target RPM cfg", RobotConstants.shooterConstants.TARGET_RPM);
         telemetry.update();
     }
 }

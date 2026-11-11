@@ -20,6 +20,7 @@ public class Shooter extends SubsystemBase {
     private double currentPercent = 0;
   private final Motor leftShooter;
   private final MotorGroup shooterMotors;
+  private boolean shooting = false;
 //private final Servo breakerLeft;
 //private final Servo breakerRight;
 
@@ -54,17 +55,16 @@ public class Shooter extends SubsystemBase {
         return currentPercent;
     }//access
 
-    public double getLeftVelocity(){
-        return Math.abs(leftShooter.getCorrectedVelocity());
-    }
-    public double getRightVelocity(){
-        return Math.abs(rightShooter.getCorrectedVelocity());
-    }
+    public double getLeftRPM(){ return Math.abs(leftShooter.getCorrectedVelocity()) * 60.0 / RobotConstants.shooterConstants.CLICKS_PER_REV; }
+    public double getRightRPM(){ return Math.abs(rightShooter.getCorrectedVelocity()) * 60.0 / RobotConstants.shooterConstants.CLICKS_PER_REV; }
+    public double getRPM(){ return (getLeftRPM() + getRightRPM()) / 2.0; }
 
     public double getTargetTicksPerSec(){
-        return currentPercent *
-               RobotConstants.shooterConstants.MAX_HD_HEX *
-               RobotConstants.shooterConstants.CLICKS_PER_REV / 60.0;
+      if(!shooting)
+          return 0;
+
+
+        return RobotConstants.shooterConstants.TARGET_RPM * RobotConstants.shooterConstants.CLICKS_PER_REV / 60.0;
 
     }
     public void updateCoefficiants(){
@@ -77,13 +77,15 @@ public class Shooter extends SubsystemBase {
                 RobotConstants.shooterConstants.kV);
     }
     public void shoot(){
+      shooting = true;
         this.currentPercent =
                 RobotConstants.shooterConstants.TARGET_RPM /
                 RobotConstants.shooterConstants.MAX_HD_HEX;
     }
 
     public void stop(){
-    currentPercent = 0;
+    shooting = false;
+        currentPercent = 0.03;
     }
 
     public void openBreaker(){
@@ -99,19 +101,27 @@ public class Shooter extends SubsystemBase {
 //        breakerLeft.setPosition(RobotConstants.shooterConstants.breakerClosePos);
 //        breakerRight.setPosition(RobotConstants.shooterConstants.breakerClosePos);
     }
-    public double velocity(){return (getLeftVelocity()+getRightVelocity())/2;}
 
-    public boolean targetVelocity(double target){return(Math.abs(velocity())>=Math.abs(target));}
 
+
+
+//    public double getCurrentVelocity(){
+//        return getLeftVelocity() * 60/28;
+//    }
     public boolean isAtSpeed(){
-        double target = getTargetTicksPerSec();
-        return target > 0 && Math.abs(getLeftVelocity() - target) < target *.05;
+        return shooting && getRPM() >= RobotConstants.shooterConstants.TARGET_RPM - 50;
+    }
+    public double getTargetRPM(){
+        return RobotConstants.shooterConstants.TARGET_RPM;
+    }
 
+
+    public void readyToStart(){
     }
     public Command shootSequence(Intake intake){
         return  new SequentialCommandGroup(
                 new InstantCommand(this::shoot),
-                new WaitUntilCommand(()->this.targetVelocity(this.getTargetTicksPerSec())),
+                //new WaitUntilCommand(()->this.targetVelocity(this.getTargetTicksPerSec())),
                 new InstantCommand(()->intake.setTransitionOnly(RobotConstants.intakeConstants.transitionPower)),
                 new InstantCommand(this::openBreaker),
                 new WaitCommand(RobotConstants.otherConstants.waitForEmpty)
