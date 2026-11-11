@@ -25,12 +25,15 @@ public class ShooterTune extends CommandOpMode {
 
         shooter.updateCoefficiants();   // picks up Dashboard edits
         if (gamepad1.a) {
-            shooter.shootMax();            // re-reads TARGET_RPM
+            shooter.shoot();            // re-reads TARGET_RPM
         } else {
             shooter.stop();
         }
 
         telemetry.addData("Velocity",shooter.getVelocity());
+        telemetry.addData("Target RPM", shooter.getTargetRPM());
+        telemetry.addData("Left RPM", shooter.getLeftRPM());
+        telemetry.addData("Right RPM", shooter.getRightRPM());
         telemetry.addData("kP live", RobotConstants.shooterConstants.kP);
         telemetry.addData("kV live", RobotConstants.shooterConstants.kV);
         telemetry.update();

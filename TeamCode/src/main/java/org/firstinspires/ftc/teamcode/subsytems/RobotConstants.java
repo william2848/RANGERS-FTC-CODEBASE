@@ -9,7 +9,7 @@ public class RobotConstants {
         public static final double MAX_HD_HEX = 6000;
         public static final double VEL_BUFFER = 0.9;
         public static double TARGET_RPM = 1150;
-        public static double TARGETVelPercent = TARGET_RPM/(MAX_HD_HEX*VEL_BUFFER);
+        public static double IDLE_POWER = 0.5;
 
         //velocity is desired rpm * 28 / 60 = ticks/second;
         public static final double CLICKS_PER_REV = 28;
@@ -19,7 +19,7 @@ public class RobotConstants {
         public static  double kI = 0;
         public static  double kD = 0;
         public static  double kS = 0;
-        public static  double kV = 9;//5
+        public static  double kV = 3;//5
 
     }
 

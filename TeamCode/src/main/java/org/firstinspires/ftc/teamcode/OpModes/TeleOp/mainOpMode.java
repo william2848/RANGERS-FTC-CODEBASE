@@ -49,14 +49,13 @@ public class mainOpMode extends CommandOpMode {
                 .whenPressed(new InstantCommand(() -> intake.setIntakeAndTransition(0.8, -1)))
                 .whenReleased(new InstantCommand(() -> intake.stop()));
 
-        driver.getGamepadButton(GamepadKeys.Button.A)
+        driver.getGamepadButton(GamepadKeys.Button.DPAD_UP)
                 .whenPressed(new InstantCommand(() -> intake.setTransitionOnly(1)))
                 .whenReleased(new InstantCommand(() -> intake.stop()));
         driver.getGamepadButton(GamepadKeys.Button.DPAD_DOWN).whenPressed(intake.outtake()).whenReleased(new InstantCommand(intake::stop));
 
        driver.getGamepadButton(GamepadKeys.Button.DPAD_RIGHT)
-               .whenPressed(new InstantCommand(()-> flowerMech.down()))
-               .whenReleased(new InstantCommand(() -> flowerMech.setToZero()));
+               .toggleWhenPressed(new InstantCommand(()-> flowerMech.down()),new InstantCommand(() -> flowerMech.setToZero()));
 
 
 

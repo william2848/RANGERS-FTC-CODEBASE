@@ -63,10 +63,10 @@ public class Shooter extends SubsystemBase {
         shooterMotors.setRunMode(Motor.RunMode.VelocityControl);
         setpoint = 1;
     }
-    public void idle(){shooterMotors.set(0.1);}
+    public void idle(){shooterMotors.set(RobotConstants.shooterConstants.IDLE_POWER);}
     public void shoot(){
         shooterMotors.setRunMode(Motor.RunMode.VelocityControl);
-        setpoint = RobotConstants.shooterConstants.TARGETVelPercent;
+        setpoint = RobotConstants.shooterConstants.TARGET_RPM / (RobotConstants.shooterConstants.MAX_HD_HEX * RobotConstants.shooterConstants.VEL_BUFFER);
     }
 
     public Command shootCommand(){return new InstantCommand(this::shoot);}
@@ -87,8 +87,8 @@ public class Shooter extends SubsystemBase {
 
 
     public boolean isAtSpeed(){
-        double target = RobotConstants.shooterConstants.TARGETVelPercent * RobotConstants.shooterConstants.MAXVel * RobotConstants.shooterConstants.VEL_BUFFER;
-        return target > 0 && Math.abs(getVelocity()) >= target * .95;
+        double targetRPM = RobotConstants.shooterConstants.TARGET_RPM;
+        return targetRPM > 0 && getLeftRPM() >= targetRPM * .95;
     }
 
 
