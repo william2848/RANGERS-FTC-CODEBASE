@@ -37,7 +37,7 @@ public class mainOpMode extends CommandOpMode {
         driver = new GamepadEx(gamepad1);
         driveBase = new DriveBase(hardwareMap);
         driveBase.setDefaultCommand(new RunCommand(()->driveBase.manual(driver.getLeftY(), driver.getLeftX(), driver.getRightX()),driveBase));
-
+        flowerMech.setToZero();
         driver.getGamepadButton(GamepadKeys.Button.RIGHT_BUMPER)
                 .whenPressed(new InstantCommand(() -> shooter.shoot()))
 //                .whileHeld(new RunCommand(() ->
@@ -55,12 +55,9 @@ public class mainOpMode extends CommandOpMode {
                 .whenPressed(new InstantCommand(() -> intake.setTransitionOnly(1)))
                 .whenReleased(new InstantCommand(() -> intake.stop()));
 
-        driver.getGamepadButton(GamepadKeys.Button.DPAD_UP)
-                .whenPressed(new InstantCommand(() -> flowerMech.setToOne()));
-        driver.getGamepadButton(GamepadKeys.Button.DPAD_DOWN)
-                .whenPressed(new InstantCommand(() -> flowerMech.setToZero()));
-        driver.getGamepadButton(GamepadKeys.Button.DPAD_RIGHT)
-                .whenPressed(new InstantCommand(() -> flowerMech.setToHalf()));
+       driver.getGamepadButton(GamepadKeys.Button.DPAD_RIGHT)
+               .whenPressed(new InstantCommand(()-> flowerMech.down()))
+               .whenReleased(new InstantCommand(() -> flowerMech.setToZero()));
 
 
 
