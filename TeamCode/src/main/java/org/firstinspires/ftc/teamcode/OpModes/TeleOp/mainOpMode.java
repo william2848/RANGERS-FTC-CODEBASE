@@ -12,6 +12,7 @@ import com.seattlesolvers.solverslib.gamepad.GamepadKeys;
 
 import org.firstinspires.ftc.teamcode.subsytems.DriveBase;
 import org.firstinspires.ftc.teamcode.subsytems.Intake;
+import org.firstinspires.ftc.teamcode.subsytems.Lightbar;
 import org.firstinspires.ftc.teamcode.subsytems.RobotConstants;
 import org.firstinspires.ftc.teamcode.subsytems.Shooter;
 
@@ -23,6 +24,7 @@ public class mainOpMode extends CommandOpMode {
     private GamepadEx operator;
     private Shooter shooter;
     private Intake intake;
+    private Lightbar lightbar;
 
     @Override
     public void initialize() {
@@ -33,6 +35,7 @@ public class mainOpMode extends CommandOpMode {
         operator = new GamepadEx(gamepad2);
         driver = new GamepadEx(gamepad1);
         driveBase = new DriveBase(hardwareMap);
+        lightbar = new Lightbar(hardwareMap,shooter);
         driveBase.setDefaultCommand(new RunCommand(()->driveBase.manual(driver.getLeftY(), driver.getLeftX(), driver.getRightX()),driveBase));
         driver.getGamepadButton(GamepadKeys.Button.RIGHT_BUMPER)
                 .whenPressed(new InstantCommand(() -> shooter.shoot()))
