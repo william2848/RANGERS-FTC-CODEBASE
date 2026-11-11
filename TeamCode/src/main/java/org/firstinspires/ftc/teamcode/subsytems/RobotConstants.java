@@ -6,14 +6,14 @@ import com.acmerobotics.dashboard.config.Config;
 public class RobotConstants {
     @Config
     public static class shooterConstants {
-        public static final double MAX_HD_HEX = 6000;
+        public static final double MAX_RPM = 6000;
         public static final double VEL_BUFFER = 0.9;
         public static double TARGET_RPM = 1150;
         public static double IDLE_POWER = 0.5;
 
         //velocity is desired rpm * 28 / 60 = ticks/second;
-        public static final double CLICKS_PER_REV = 28;
-        public static double MAXVel = CLICKS_PER_REV * MAX_HD_HEX / 60.0;
+        public static final double TICKS_PER_SEC = 28;
+        public static double MAXVel = TICKS_PER_SEC * MAX_RPM / 60.0;
 
         public static  double kP = 45;
         public static  double kI = 0;

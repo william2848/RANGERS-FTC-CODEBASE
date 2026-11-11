@@ -26,8 +26,8 @@ public class Shooter extends SubsystemBase {
   private Telemetry telemetry;
 
     public Shooter(HardwareMap hardwareMap, Telemetry shooterTelemetry){
-        rightShooter = new MotorEx(hardwareMap, "rightShooter", RobotConstants.shooterConstants.CLICKS_PER_REV, RobotConstants.shooterConstants.MAX_HD_HEX);
-        leftShooter = new MotorEx(hardwareMap, "leftShooter", RobotConstants.shooterConstants.CLICKS_PER_REV, RobotConstants.shooterConstants.MAX_HD_HEX);
+        rightShooter = new MotorEx(hardwareMap, "rightShooter", RobotConstants.shooterConstants.TICKS_PER_SEC, RobotConstants.shooterConstants.MAX_RPM);
+        leftShooter = new MotorEx(hardwareMap, "leftShooter", RobotConstants.shooterConstants.TICKS_PER_SEC, RobotConstants.shooterConstants.MAX_RPM);
         shooterMotors = new MotorGroup(leftShooter.setInverted(true), rightShooter);
         shooterMotors.setBuffer(RobotConstants.shooterConstants.VEL_BUFFER);
         shooterMotors.setVeloCoefficients(RobotConstants.shooterConstants.kP, RobotConstants.shooterConstants.kI, RobotConstants.shooterConstants.kD);//Set PID Value
@@ -37,8 +37,8 @@ public class Shooter extends SubsystemBase {
         register();
     }
     public Shooter(HardwareMap hardwareMap){
-        rightShooter = new MotorEx(hardwareMap, "rightShooter", RobotConstants.shooterConstants.CLICKS_PER_REV, RobotConstants.shooterConstants.MAX_HD_HEX);
-        leftShooter = new MotorEx(hardwareMap, "leftShooter", RobotConstants.shooterConstants.CLICKS_PER_REV, RobotConstants.shooterConstants.MAX_HD_HEX);
+        rightShooter = new MotorEx(hardwareMap, "rightShooter", RobotConstants.shooterConstants.TICKS_PER_SEC, RobotConstants.shooterConstants.MAX_RPM);
+        leftShooter = new MotorEx(hardwareMap, "leftShooter", RobotConstants.shooterConstants.TICKS_PER_SEC, RobotConstants.shooterConstants.MAX_RPM);
         shooterMotors = new MotorGroup(leftShooter, rightShooter);
         leftShooter.setBuffer(RobotConstants.shooterConstants.VEL_BUFFER);
         shooterMotors.setVeloCoefficients(RobotConstants.shooterConstants.kP, RobotConstants.shooterConstants.kI, RobotConstants.shooterConstants.kD);//Set PID Value
@@ -66,7 +66,7 @@ public class Shooter extends SubsystemBase {
     public void idle(){shooterMotors.set(RobotConstants.shooterConstants.IDLE_POWER);}
     public void shoot(){
         shooterMotors.setRunMode(Motor.RunMode.VelocityControl);
-        setpoint = RobotConstants.shooterConstants.TARGET_RPM / (RobotConstants.shooterConstants.MAX_HD_HEX * RobotConstants.shooterConstants.VEL_BUFFER);
+        setpoint = RobotConstants.shooterConstants.TARGET_RPM / (RobotConstants.shooterConstants.MAX_RPM * RobotConstants.shooterConstants.VEL_BUFFER);
     }
 
     public Command shootCommand(){return new InstantCommand(this::shoot);}
@@ -78,8 +78,8 @@ public class Shooter extends SubsystemBase {
 
     public void end(){stop();}
     public double getVelocity(){return shooterMotors.getVelocity();}
-    public double getLeftRPM(){ return Math.abs(leftShooter.getCorrectedVelocity()) * 60.0 / RobotConstants.shooterConstants.CLICKS_PER_REV; }
-    public double getRightRPM(){ return Math.abs(rightShooter.getCorrectedVelocity()) * 60.0 / RobotConstants.shooterConstants.CLICKS_PER_REV; }
+    public double getLeftRPM(){ return Math.abs(leftShooter.getCorrectedVelocity()) * 60.0 / RobotConstants.shooterConstants.TICKS_PER_SEC; }
+    public double getRightRPM(){ return Math.abs(rightShooter.getCorrectedVelocity()) * 60.0 / RobotConstants.shooterConstants.TICKS_PER_SEC; }
     public double getRPM(){ return (getLeftRPM() + getRightRPM()) / 2.0; }
     public double getTargetRPM(){
         return RobotConstants.shooterConstants.TARGET_RPM;
