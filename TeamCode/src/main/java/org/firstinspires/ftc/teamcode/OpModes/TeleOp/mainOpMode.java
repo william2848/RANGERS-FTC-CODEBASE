@@ -11,6 +11,7 @@ import com.seattlesolvers.solverslib.gamepad.GamepadEx;
 import com.seattlesolvers.solverslib.gamepad.GamepadKeys;
 
 import org.firstinspires.ftc.teamcode.subsytems.DriveBase;
+import org.firstinspires.ftc.teamcode.subsytems.FlowerMech;
 import org.firstinspires.ftc.teamcode.subsytems.Intake;
 import org.firstinspires.ftc.teamcode.subsytems.RobotConstants;
 import org.firstinspires.ftc.teamcode.subsytems.Shooter;
@@ -23,11 +24,13 @@ public class mainOpMode extends CommandOpMode {
     private GamepadEx operator;
     private Shooter shooter;
     private Intake intake;
+    private FlowerMech flowerMech;
 
     @Override
     public void initialize() {
 
         telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
+        flowerMech = new FlowerMech(hardwareMap);
         intake = new Intake(hardwareMap);
         shooter = new Shooter(hardwareMap);
         operator = new GamepadEx(gamepad2);
@@ -51,6 +54,16 @@ public class mainOpMode extends CommandOpMode {
         driver.getGamepadButton(GamepadKeys.Button.A)
                 .whenPressed(new InstantCommand(() -> intake.setTransitionOnly(1)))
                 .whenReleased(new InstantCommand(() -> intake.stop()));
+
+        driver.getGamepadButton(GamepadKeys.Button.DPAD_UP)
+                .whenPressed(new InstantCommand(() -> flowerMech.setToOne()));
+        driver.getGamepadButton(GamepadKeys.Button.DPAD_DOWN)
+                .whenPressed(new InstantCommand(() -> flowerMech.setToZero()));
+        driver.getGamepadButton(GamepadKeys.Button.DPAD_RIGHT)
+                .whenPressed(new InstantCommand(() -> flowerMech.setToHalf()));
+
+
+
     }
 
     @Override
@@ -78,16 +91,10 @@ public class mainOpMode extends CommandOpMode {
         telemetry.addData("PosX", driveBase.getPose().x());
         telemetry.addData("PosY", driveBase.getPose().y());
         telemetry.addData("Rotation",driveBase.getPose().heading());
-        // Telemetry (also graphed on the Dashboard)
         telemetry.addData("Target RPM", shooter.getTargetRPM());
-        telemetry.addData("Right RPM", shooter.getRightRPM());
         telemetry.addData("Left RPM", shooter.getLeftRPM());
-        telemetry.addData("At Speed", shooter.isAtSpeed());
-        telemetry.addData("kP", RobotConstants.shooterConstants.kP);
-        telemetry.addData("kI",RobotConstants.shooterConstants.kI);
-        telemetry.addData("kD",RobotConstants.shooterConstants.kD);
-        telemetry.addData("kV", RobotConstants.shooterConstants.kV);
-        telemetry.addData("Target RPM cfg", RobotConstants.shooterConstants.TARGET_RPM);
+        telemetry.addData("Current Servo Position", flowerMech.getPosition());
+
         telemetry.update();
     }
 }
