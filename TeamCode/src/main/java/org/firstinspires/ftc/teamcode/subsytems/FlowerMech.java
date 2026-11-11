@@ -16,19 +16,22 @@ public class FlowerMech extends SubsystemBase {
 
 
     public void setToZero(){
-        this.flowerServo.set(0);//DPAD DOWN
+        this.flowerServo.set(0.0);//DPAD DOWN
     }
 
-    public void setToHalf(){
-        this.flowerServo.set(0.5);//DPAD Right
+    public void down(){
+        this.flowerServo.set(0.58);
     }
 
-    public void setToOne(){
-        this.flowerServo.set(1);//DPAD UP
-    }
+
+//    public void sto(){
+//        this.flowerServo()
+//    }
+
 
     public double getPosition(){
         return flowerServo.getRawPosition();
     }
+
 
 }
