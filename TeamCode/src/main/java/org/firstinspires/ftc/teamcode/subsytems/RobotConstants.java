@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.subsytems;
 import com.acmerobotics.dashboard.config.Config;
-
+//~/Library/Android/sdk/platform-tools/adb connect 192.168.43.1:5555
+//~/Library/Android/sdk/platform-tools/adb kill-server; pkill -x adb
 @Config
 public class RobotConstants {
     @Config
