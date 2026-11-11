@@ -85,7 +85,7 @@ public class Shooter extends SubsystemBase {
 
     public void stop(){
     shooting = false;
-        currentPercent = 0.03;
+        currentPercent = 0.1;
     }
 
     public void openBreaker(){

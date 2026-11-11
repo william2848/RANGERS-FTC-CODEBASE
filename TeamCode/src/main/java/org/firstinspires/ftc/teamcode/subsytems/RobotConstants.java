@@ -6,7 +6,7 @@ public class RobotConstants {
     @Config
     public static class shooterConstants {
         public static final double MAX_HD_HEX = 6000;
-        public static double TARGET_RPM = 1100;
+        public static double TARGET_RPM = 1150;
 
         public static double TARGET_TICKS = TARGET_RPM * 28 / 60;
 
