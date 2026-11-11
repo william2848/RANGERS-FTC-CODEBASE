@@ -31,10 +31,8 @@ public class Intake extends SubsystemBase {
     public void setTransitionOnly(double power){
         this.transition.set(power);
     }
-
-    public void stop(){
-        setIntakeAndTransition(0,0);
-    }
+    public Command outtake(){return new InstantCommand(()->this.setIntakeAndTransition(-1,1));}
+    public void stop(){setIntakeAndTransition(0,0);}
 
     public Command runIntake(double intakePower, double transitionPower){return new InstantCommand(()->setIntakeAndTransition(intakePower, -transitionPower),this);}
     public Command stopIntake(){return new InstantCommand(this::stop,this);}

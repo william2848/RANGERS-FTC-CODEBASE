@@ -66,7 +66,7 @@ public class ShootThenMove extends OpMode {
     @Override
     public void init(){
         intake = new Intake(hardwareMap);
-        shooter = new Shooter(hardwareMap);
+        shooter = new Shooter(hardwareMap, telemetry);
         Scheduler.reset();
         follower = Constants.create(hardwareMap);
         follower.setPose(startPose);
@@ -88,7 +88,7 @@ public class ShootThenMove extends OpMode {
         telemetry.addData("Y", follower.pose().y());
         telemetry.addData("Heading", Math.toDegrees(follower.pose().heading()));
         telemetry.addData("Follower Mode", follower.mode());
-        telemetry.addData("Current Shooter Velocity(t/s):", shooter.getVelocity());
+        telemetry.addData("Current Shooter RPM", shooter.getRPM());
         telemetry.update();
 
     }

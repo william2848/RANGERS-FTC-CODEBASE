@@ -84,7 +84,7 @@ public class MainAuto extends OpMode {
     @Override
     public void init(){
         intake = new Intake(hardwareMap);
-        shooter = new Shooter(hardwareMap);
+        shooter = new Shooter(hardwareMap, telemetry);
     Scheduler.reset();
     follower = Constants.create(hardwareMap);
     follower.setPose(startPose);
