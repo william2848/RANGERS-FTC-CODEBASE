@@ -6,11 +6,12 @@ public class RobotConstants {
     @Config
     public static class shooterConstants {
         public static final double MAX_HD_HEX = 6000;
-        public static double TARGETVelPercent = 0;
-        public static double TARGET_RPM = 1300;
-
+        public static double TARGETVelPercent = 0.5;
+        public static double TARGET_RPM = 3000;
+        //velocity is desired rpm * 28 / 60 = ticks/second;
         public static final double CLICKS_PER_REV = 28;
-        public static double MAXVel = 6000;
+        public static double MAXVel = CLICKS_PER_REV * MAX_HD_HEX / 60.0;
+        public static final double VEL_BUFFER = 0.9;
         public static  double kP = 30;
         public static  double kI = 0;
         public static  double kD = 0;

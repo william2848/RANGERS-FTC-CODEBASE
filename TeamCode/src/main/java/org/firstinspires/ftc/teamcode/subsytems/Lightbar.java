@@ -15,8 +15,13 @@ public class Lightbar extends SubsystemBase {
     private String currentInstance = "None";
     PrismAnimations.Solid red = new PrismAnimations.Solid(Color.RED);
     PrismAnimations.Solid green = new PrismAnimations.Solid(Color.GREEN);
-    public Lightbar(HardwareMap hardwareMap){
+    private Shooter shooter;
+
+    public Lightbar(HardwareMap hardwareMap, Shooter shooter){
         prism = hardwareMap.get(GoBildaPrismDriver.class, "prism");
+        this.shooter = shooter;
+
+        register();
     }
     public void green(){
         if(!currentInstance.equalsIgnoreCase("GREEN")){
@@ -31,4 +36,13 @@ public class Lightbar extends SubsystemBase {
         }
     }
     public Command Clear(){return new InstantCommand(()->prism.clearAllAnimations());}
+
+    @Override
+    public void periodic(){
+        if(shooter.isAtSpeed())
+            this.green();
+        else
+            this.red();
+    }
+
 }

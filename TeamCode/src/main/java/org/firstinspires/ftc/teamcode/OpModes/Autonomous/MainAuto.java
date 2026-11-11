@@ -100,6 +100,7 @@ public class MainAuto extends OpMode {
     public void loop(){
     follower.update();
     Scheduler.execute();
+    shooter.periodic(); // Ivy does not run SolversLib subsystems, so apply the shooter setpoint here
     //getting poses and stuff
         telemetry.addData("X", follower.pose().x());
         telemetry.addData("Y", follower.pose().y());

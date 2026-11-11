@@ -29,7 +29,7 @@ public class mainOpMode extends CommandOpMode {
 
         telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
         intake = new Intake(hardwareMap);
-        shooter = new Shooter(hardwareMap);
+        shooter = new Shooter(hardwareMap, telemetry);
         operator = new GamepadEx(gamepad2);
         driver = new GamepadEx(gamepad1);
         driveBase = new DriveBase(hardwareMap);
@@ -73,9 +73,7 @@ public class mainOpMode extends CommandOpMode {
         telemetry.addData("PosY", driveBase.getPose().y());
         telemetry.addData("Rotation",driveBase.getPose().heading());
         // Telemetry (also graphed on the Dashboard)
-        telemetry.addData("Target (t/Sec):", shooter.getTargetTicksPerSec());
-        telemetry.addData("Right (t/Sec):", shooter.getRightVelocity());
-        telemetry.addData("Left (t/Sec):", shooter.getLeftVelocity());
+        telemetry.addData("Shooter Velocity (t/s):", shooter.getVelocity());
         telemetry.update();
     }
 }
