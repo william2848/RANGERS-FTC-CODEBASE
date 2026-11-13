@@ -10,6 +10,8 @@ import com.seattlesolvers.solverslib.command.RunCommand;
 import com.seattlesolvers.solverslib.gamepad.GamepadEx;
 import com.seattlesolvers.solverslib.gamepad.GamepadKeys;
 
+import org.firstinspires.ftc.teamcode.LightBar.Color;
+import org.firstinspires.ftc.teamcode.LightBar.PrismAnimations;
 import org.firstinspires.ftc.teamcode.subsytems.DriveBase;
 import org.firstinspires.ftc.teamcode.subsytems.FlowerMech;
 import org.firstinspires.ftc.teamcode.subsytems.Intake;
@@ -27,10 +29,10 @@ public class mainOpMode extends CommandOpMode {
     private Intake intake;
     private Lightbar lightbar;
     private FlowerMech flowerMech;
+    private double shotType;
 
     @Override
     public void initialize() {
-
         telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
         flowerMech = new FlowerMech(hardwareMap);
         intake = new Intake(hardwareMap);
@@ -41,23 +43,67 @@ public class mainOpMode extends CommandOpMode {
         driveBase = new DriveBase(hardwareMap);
         driveBase.setDefaultCommand(new RunCommand(()->driveBase.manual(driver.getLeftY(), driver.getLeftX(), driver.getRightX()),driveBase));
         flowerMech.setToZero();
+        shotType = RobotConstants.shooterConstants.TARGET_RPM;
         driver.getGamepadButton(GamepadKeys.Button.RIGHT_BUMPER)
-                .whenPressed(new InstantCommand(() -> shooter.shoot()))
-                .whenReleased(new InstantCommand(() -> shooter.stop()));
+                .whenPressed(new InstantCommand(() -> intake.setTransitionOnly(1)))
+                .whenReleased(new InstantCommand(() -> intake.stop()));
 
         driver.getGamepadButton(GamepadKeys.Button.LEFT_BUMPER)
                 .whenPressed(new InstantCommand(() -> intake.setIntakeAndTransition(0.8, -1)))
                 .whenReleased(new InstantCommand(() -> intake.stop()));
 
-        driver.getGamepadButton(GamepadKeys.Button.DPAD_UP)
-                .whenPressed(new InstantCommand(() -> intake.setTransitionOnly(1)))
-                .whenReleased(new InstantCommand(() -> intake.stop()));
+
         driver.getGamepadButton(GamepadKeys.Button.DPAD_DOWN).whenPressed(intake.outtake()).whenReleased(new InstantCommand(intake::stop));
 
        driver.getGamepadButton(GamepadKeys.Button.DPAD_RIGHT)
                .toggleWhenPressed(new InstantCommand(()-> flowerMech.down()),new InstantCommand(() -> flowerMech.setToZero()));
 
-
+       driver.getGamepadButton(GamepadKeys.Button.Y)
+               .whenPressed(
+                        new InstantCommand(()->{
+                            this.shooter.shoot(RobotConstants.shooterConstants.TARGET_RPM);
+                            this.shotType = RobotConstants.shooterConstants.TARGET_RPM;
+                            lightbar.setManual(true);
+                            lightbar.getCurrentLight("Yellow");
+                        }))
+               .whenReleased(
+                       new InstantCommand(()->{
+                           this.shooter.end();
+                           lightbar.setManual(false);
+                           lightbar.getCurrentLight("none");
+                       }
+               ));
+        driver.getGamepadButton(GamepadKeys.Button.X)
+                .whenPressed(
+                        new InstantCommand(
+                        ()->{
+                            this.shooter.shoot(RobotConstants.shooterConstants.TWO_SHOT_RPM);
+                            this.shotType = RobotConstants.shooterConstants.TWO_SHOT_RPM;
+                            lightbar.setManual(true);
+                            lightbar.getCurrentLight("BLUE");
+                        }))
+                .whenReleased(
+                        new InstantCommand(()->{
+                            this.shooter.end();
+                            lightbar.setManual(false);
+                            lightbar.getCurrentLight("none");
+                        }
+                ));
+        driver.getGamepadButton(GamepadKeys.Button.B)
+                .whenPressed(
+                        new InstantCommand(()->{
+                            this.shooter.shoot(RobotConstants.shooterConstants.ONE_SHOT_RPM);
+                            this.shotType = RobotConstants.shooterConstants.ONE_SHOT_RPM;
+                            lightbar.setManual(true);
+                            lightbar.getCurrentLight("RED");
+                        }))
+                .whenReleased(
+                        new InstantCommand(()->{
+                            this.shooter.end();
+                            lightbar.setManual(false);
+                            lightbar.getCurrentLight("none");
+                        }
+                ));
 
     }
 
@@ -86,7 +132,7 @@ public class mainOpMode extends CommandOpMode {
         telemetry.addData("PosX", driveBase.getPose().x());
         telemetry.addData("PosY", driveBase.getPose().y());
         telemetry.addData("Rotation",driveBase.getPose().heading());
-        telemetry.addData("Target RPM", shooter.getTargetRPM());
+        telemetry.addData("Target RPM", this.shotType);
         telemetry.addData("Left RPM", shooter.getLeftRPM());
         telemetry.addData("Current Servo Position", flowerMech.getPosition());
 

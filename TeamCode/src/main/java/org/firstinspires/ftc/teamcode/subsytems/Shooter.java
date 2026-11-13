@@ -23,6 +23,7 @@ public class Shooter extends SubsystemBase {
     private double setpoint;
   private final MotorEx leftShooter;
   private final MotorGroup shooterMotors;
+  private double targetRPM;
   private Telemetry telemetry;
 
     public Shooter(HardwareMap hardwareMap, Telemetry shooterTelemetry){
@@ -54,7 +55,7 @@ public class Shooter extends SubsystemBase {
         shooterMotors.setVeloCoefficients(
                 RobotConstants.shooterConstants.kP,
                 RobotConstants.shooterConstants.kI,
-                RobotConstants.shooterConstants.kD);//Set PID Value
+                RobotConstants.shooterConstants.kD);
         shooterMotors.setFeedforwardCoefficients(
                 RobotConstants.shooterConstants.kS,
                 RobotConstants.shooterConstants.kV);
@@ -64,12 +65,15 @@ public class Shooter extends SubsystemBase {
         setpoint = 1;
     }
     public void idle(){shooterMotors.set(RobotConstants.shooterConstants.IDLE_POWER);}
-    public void shoot(){
+    public void shoot(double targetRPM){
+        if(targetRPM==0)
+            this.targetRPM = RobotConstants.shooterConstants.TARGET_RPM;
+        else
+            this.targetRPM = targetRPM;
         shooterMotors.setRunMode(Motor.RunMode.VelocityControl);
-        setpoint = RobotConstants.shooterConstants.TARGET_RPM / (RobotConstants.shooterConstants.MAX_RPM * RobotConstants.shooterConstants.VEL_BUFFER);
+        setpoint = this.targetRPM/ (RobotConstants.shooterConstants.MAX_RPM * RobotConstants.shooterConstants.VEL_BUFFER);
     }
-
-    public Command shootCommand(){return new InstantCommand(this::shoot);}
+    public double getTargetRPM(){return this.targetRPM;}
     public Command stopCommand(){return new InstantCommand(this::stop);}
     public void stop(){
         shooterMotors.setRunMode(Motor.RunMode.RawPower);
@@ -81,14 +85,10 @@ public class Shooter extends SubsystemBase {
     public double getLeftRPM(){ return Math.abs(leftShooter.getCorrectedVelocity()) * 60.0 / RobotConstants.shooterConstants.TICKS_PER_SEC; }
     public double getRightRPM(){ return Math.abs(rightShooter.getCorrectedVelocity()) * 60.0 / RobotConstants.shooterConstants.TICKS_PER_SEC; }
     public double getRPM(){ return (getLeftRPM() + getRightRPM()) / 2.0; }
-    public double getTargetRPM(){
-        return RobotConstants.shooterConstants.TARGET_RPM;
-    }
 
 
     public boolean isAtSpeed(){
-        double targetRPM = RobotConstants.shooterConstants.TARGET_RPM;
-        return targetRPM > 0 && getLeftRPM() >= targetRPM * .95;
+        return this.targetRPM > 0 && getLeftRPM() >= this.targetRPM * .95;
     }
 
 

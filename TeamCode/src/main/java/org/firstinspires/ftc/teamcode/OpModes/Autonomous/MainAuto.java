@@ -54,7 +54,7 @@ public class MainAuto extends OpMode {
 
     private Command shootStationary(){
         return sequential(
-                instant(() -> shooter.shoot()),
+                instant(() -> shooter.shoot(0)),
                 waitMs(3000),
                 instant(() ->intake.setTransitionOnly(0.8)),
                 waitMs(2500),

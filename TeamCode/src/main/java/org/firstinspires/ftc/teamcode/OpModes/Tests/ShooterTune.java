@@ -25,7 +25,7 @@ public class ShooterTune extends CommandOpMode {
 
         shooter.updateCoefficiants();   // picks up Dashboard edits
         if (gamepad1.a) {
-            shooter.shoot();            // re-reads TARGET_RPM
+            shooter.shoot(0);            // re-reads TARGET_RPM
         } else {
             shooter.stop();
         }

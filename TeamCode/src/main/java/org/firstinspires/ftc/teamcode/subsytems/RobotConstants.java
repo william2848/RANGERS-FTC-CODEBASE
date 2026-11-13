@@ -7,6 +7,8 @@ public class RobotConstants {
     @Config
     public static class shooterConstants {
         public static final double MAX_RPM = 6000;
+        public static final double TWO_SHOT_RPM = 1125;
+        public static final double ONE_SHOT_RPM = 1100;
         public static final double VEL_BUFFER = 0.9;
         public static double TARGET_RPM = 1150;
         public static double IDLE_POWER = 0.5;
@@ -24,8 +26,8 @@ public class RobotConstants {
     }
 
     public static class intakeConstants {
-        public static double intakePower = 0.8;
-        public static double transitionPower = 0.8;
+        public static double intakePower = 1;
+        public static double transitionPower = 1;
     }
     public static class otherConstants{
         public static long waitForEmpty = 2000;
