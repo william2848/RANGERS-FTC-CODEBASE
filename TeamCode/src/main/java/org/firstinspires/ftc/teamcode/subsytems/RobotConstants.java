@@ -21,7 +21,7 @@ public class RobotConstants {
         public static  double kI = 0;
         public static  double kD = 0;
         public static  double kS = 0;
-        public static  double kV = 3;//5
+        public static  double kV = 4;//5
 
     }
 

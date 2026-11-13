@@ -59,52 +59,40 @@ public class mainOpMode extends CommandOpMode {
                .toggleWhenPressed(new InstantCommand(()-> flowerMech.down()),new InstantCommand(() -> flowerMech.setToZero()));
 
        driver.getGamepadButton(GamepadKeys.Button.Y)
-               .whenPressed(
+               .toggleWhenPressed(
                         new InstantCommand(()->{
-                            this.shooter.shoot(RobotConstants.shooterConstants.TARGET_RPM);
                             this.shotType = RobotConstants.shooterConstants.TARGET_RPM;
                             lightbar.setManual(true);
                             lightbar.getCurrentLight("Yellow");
-                        }))
-               .whenReleased(
-                       new InstantCommand(()->{
-                           this.shooter.end();
+                        }) ,new InstantCommand(()->{
                            lightbar.setManual(false);
                            lightbar.getCurrentLight("none");
-                       }
-               ));
+                       }));
         driver.getGamepadButton(GamepadKeys.Button.X)
-                .whenPressed(
+                .toggleWhenPressed(
                         new InstantCommand(
                         ()->{
-                            this.shooter.shoot(RobotConstants.shooterConstants.TWO_SHOT_RPM);
                             this.shotType = RobotConstants.shooterConstants.TWO_SHOT_RPM;
                             lightbar.setManual(true);
                             lightbar.getCurrentLight("BLUE");
-                        }))
-                .whenReleased(
-                        new InstantCommand(()->{
-                            this.shooter.end();
+                        }) ,new InstantCommand(()->{
                             lightbar.setManual(false);
                             lightbar.getCurrentLight("none");
-                        }
-                ));
+                        }));
         driver.getGamepadButton(GamepadKeys.Button.B)
-                .whenPressed(
+                .toggleWhenPressed(
                         new InstantCommand(()->{
-                            this.shooter.shoot(RobotConstants.shooterConstants.ONE_SHOT_RPM);
                             this.shotType = RobotConstants.shooterConstants.ONE_SHOT_RPM;
                             lightbar.setManual(true);
                             lightbar.getCurrentLight("RED");
-                        }))
-                .whenReleased(
+                        }),
                         new InstantCommand(()->{
-                            this.shooter.end();
                             lightbar.setManual(false);
                             lightbar.getCurrentLight("none");
-                        }
-                ));
-
+                        }));
+        driver.getGamepadButton(GamepadKeys.Button.DPAD_UP)
+                .whenPressed(new InstantCommand(()->{shooter.shoot(this.shotType);}))
+                .whenReleased(new InstantCommand(()->{lightbar.setManual(false);lightbar.getCurrentLight("none"); this.shotType = RobotConstants.shooterConstants.TARGET_RPM;}));
     }
 
     @Override
