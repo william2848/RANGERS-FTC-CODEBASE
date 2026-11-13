@@ -44,9 +44,7 @@ public class mainOpMode extends CommandOpMode {
         driveBase.setDefaultCommand(new RunCommand(()->driveBase.manual(driver.getLeftY(), driver.getLeftX(), driver.getRightX()),driveBase));
         flowerMech.setToZero();
         shotType = RobotConstants.shooterConstants.TARGET_RPM;
-        driver.getGamepadButton(GamepadKeys.Button.RIGHT_BUMPER)
-                .whenPressed(new InstantCommand(() -> intake.setTransitionOnly(1)))
-                .whenReleased(new InstantCommand(() -> intake.stop()));
+
 
         driver.getGamepadButton(GamepadKeys.Button.LEFT_BUMPER)
                 .whenPressed(new InstantCommand(() -> intake.setIntakeAndTransition(0.8, -1)))
@@ -91,8 +89,12 @@ public class mainOpMode extends CommandOpMode {
                             lightbar.getCurrentLight("none");
                         }));
         driver.getGamepadButton(GamepadKeys.Button.DPAD_UP)
+                .whenPressed(new InstantCommand(() -> intake.setTransitionOnly(1)))
+                .whenReleased(new InstantCommand(() -> {intake.stop();lightbar.setManual(false);lightbar.getCurrentLight("none"); this.shotType = RobotConstants.shooterConstants.TARGET_RPM;}));
+
+        driver.getGamepadButton(GamepadKeys.Button.RIGHT_BUMPER)
                 .whenPressed(new InstantCommand(()->{shooter.shoot(this.shotType);}))
-                .whenReleased(new InstantCommand(()->{lightbar.setManual(false);lightbar.getCurrentLight("none"); this.shotType = RobotConstants.shooterConstants.TARGET_RPM;}));
+                .whenReleased(new InstantCommand(shooter::end));
     }
 
     @Override
