@@ -24,42 +24,36 @@ import static com.pedropathing.ivy.groups.Groups.sequential;
 import static com.pedropathing.ivy.pedro.PedroCommands.follow;
 
 
-@Autonomous(name = "ShootThenMove")
-public class ShootThenMove extends OpMode {
+@Autonomous(name = "ParkRed2")
+public class ParkRed2 extends OpMode {
 
     private Follower follower;
     private Intake intake;
     private Shooter shooter;
     private final PoseFactory p = PoseFactory.degrees();
-    private final Pose startPose = p.of(60,9,90);
+    private final Pose startPose = p.of(59.68,131.2,270);
 
-    private final Pose park = p.of(9.6,97.33,90);
-    private final Pose parkControlPose = p.of(26.31,34.22,90);
+    private final Pose toNext = p.of(59.68,110.6,270);
+    private final Pose park = p.of(9.61,110.6,270);
 
 
-
+    private Path go(){
+        return line(startPose,toNext).linear(startPose,toNext);
+    }
 
     private Path park(){
-        return curve(startPose,parkControlPose,park).linear(startPose,park);
+        return line(toNext,park).linear(toNext,park);
     }
 
 
-    private Command shootStationary(){
-        return sequential(
-                instant(() -> shooter.shoot(0)),
-                waitMs(3000),
 
-                instant(() ->intake.setTransitionOnly(0.8)),
-                waitMs(3000),
-                instant(() -> shooter.stop()),
-                instant(() -> intake.stop()));
-    }
 
     private Command autoRoutine(){
         return sequential(
-                shootStationary(),
-                follow(follower,park())
-                );
+                follow(follower,go()),
+                follow(follower,park()),
+                instant(() -> shooter.stopWithoutIdle())
+        );
 
     }
 
@@ -82,7 +76,6 @@ public class ShootThenMove extends OpMode {
     public void loop(){
         follower.update();
         Scheduler.execute();
-        shooter.periodic(); // Ivy does not run SolversLib subsystems, so apply the shooter setpoint here
         //getting poses and stuff
         telemetry.addData("X", follower.pose().x());
         telemetry.addData("Y", follower.pose().y());

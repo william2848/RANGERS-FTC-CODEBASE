@@ -25,6 +25,7 @@ public class Shooter extends SubsystemBase {
   private final MotorGroup shooterMotors;
   private double targetRPM;
   private Telemetry telemetry;
+  private boolean isOn = false;
 
     public Shooter(HardwareMap hardwareMap, Telemetry shooterTelemetry){
         rightShooter = new MotorEx(hardwareMap, "rightShooter", RobotConstants.shooterConstants.TICKS_PER_SEC, RobotConstants.shooterConstants.MAX_RPM);
@@ -64,10 +65,13 @@ public class Shooter extends SubsystemBase {
         shooterMotors.setRunMode(Motor.RunMode.VelocityControl);
         setpoint = 1;
     }
+    public void stopIdle(boolean stop){
+        this.isOn = stop;
+    }
     public void idle(){shooterMotors.set(RobotConstants.shooterConstants.IDLE_POWER);}
     public void shoot(double targetRPM){
         if(targetRPM==0)
-            this.targetRPM = RobotConstants.shooterConstants.TARGET_RPM;
+            this.targetRPM = RobotConstants.shooterConstants.TWO_SHOT_RPM;
         else
             this.targetRPM = targetRPM;
         shooterMotors.setRunMode(Motor.RunMode.VelocityControl);
@@ -78,6 +82,11 @@ public class Shooter extends SubsystemBase {
     public void stop(){
         shooterMotors.setRunMode(Motor.RunMode.RawPower);
         setpoint = 0;
+    }
+    public void stopWithoutIdle(){
+        shooterMotors.setRunMode(Motor.RunMode.RawPower);
+        setpoint=0;
+        isOn = true;
     }
 
     public void end(){stop();}
@@ -94,7 +103,9 @@ public class Shooter extends SubsystemBase {
 
     @Override
     public void periodic(){
-        if(!(setpoint==0))
+        if(isOn)
+            shooterMotors.set(0);
+        else if(!(setpoint==0))
             shooterMotors.set(setpoint);
 
         else

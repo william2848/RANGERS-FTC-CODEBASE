@@ -20,7 +20,7 @@ public class FlowerMech extends SubsystemBase {
     }
 
     public void down(){
-        this.flowerServo.set(0.58);
+        this.flowerServo.set(0.6);
     }
 
 

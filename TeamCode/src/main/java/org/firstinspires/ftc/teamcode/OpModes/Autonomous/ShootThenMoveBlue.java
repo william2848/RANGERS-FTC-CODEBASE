@@ -24,17 +24,17 @@ import static com.pedropathing.ivy.groups.Groups.sequential;
 import static com.pedropathing.ivy.pedro.PedroCommands.follow;
 
 
-@Autonomous(name = "Move")
-public class Move extends OpMode {
+@Autonomous(name = "ShootThenMoveBlue")
+public class ShootThenMoveBlue extends OpMode {
 
     private Follower follower;
     private Intake intake;
     private Shooter shooter;
     private final PoseFactory p = PoseFactory.degrees();
-    private final Pose startPose = p.of(60,9,90);
+    private final Pose startPose = p.of(82.5,129.5,270);
 
-    private final Pose park = p.of(9.6,97.33,90);
-    private final Pose parkControlPose = p.of(26.31,34.22,90);
+    private final Pose park = p.of(130.09,47.27,270);
+    private final Pose parkControlPose = p.of(126.17,116.93,270);
 
 
 
@@ -44,10 +44,22 @@ public class Move extends OpMode {
     }
 
 
-
+    private Command shootStationary(){
+        return sequential(
+                instant(() -> shooter.shoot(0)),
+                waitMs(5000),
+                instant(() ->intake.setTransitionOnly(1)),
+                waitMs(1000),
+                instant(() -> intake.setIntakeAndTransition(1,1)),
+                waitMs(2000),
+                instant(() -> shooter.stopWithoutIdle()),
+                instant(() -> shooter.stopIdle(false)),
+                instant(() -> intake.stop()));
+    }
 
     private Command autoRoutine(){
         return sequential(
+                shootStationary(),
                 follow(follower,park())
         );
 
@@ -56,7 +68,7 @@ public class Move extends OpMode {
     @Override
     public void init(){
         intake = new Intake(hardwareMap);
-        shooter = new Shooter(hardwareMap);
+        shooter = new Shooter(hardwareMap, telemetry);
         Scheduler.reset();
         follower = Constants.create(hardwareMap);
         follower.setPose(startPose);
@@ -72,6 +84,7 @@ public class Move extends OpMode {
     public void loop(){
         follower.update();
         Scheduler.execute();
+        shooter.periodic();
         //getting poses and stuff
         telemetry.addData("X", follower.pose().x());
         telemetry.addData("Y", follower.pose().y());
@@ -85,4 +98,3 @@ public class Move extends OpMode {
 
 
 }
-
