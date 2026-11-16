@@ -27,9 +27,12 @@ public class mainOpMode extends CommandOpMode {
 
     private Trigger shootTrigger;
     private Trigger outtakeTrigger;
+
+    private Trigger autoAlign;
     private GamepadEx driver;
     //private GamepadEx operator = new GamepadEx(gamepad2);
     public void initialize(){
+        reset();
 
         intake = new Intake(hardwareMap);
         shooter = new Shooter(hardwareMap);
@@ -39,12 +42,12 @@ public class mainOpMode extends CommandOpMode {
 
 //        driver.getGamepadButton(GamepadKeys.Button.A)
 //                .whenPressed(driveBase.driveTo(new Pose(0,0,0)));
-            driver.getGamepadButton(GamepadKeys.Button.LEFT_BUMPER)
-                    .whenPressed(intake.runIntake())
-                    .whenReleased(intake.stopIntake());
+        driver.getGamepadButton(GamepadKeys.Button.LEFT_BUMPER)
+                .whenPressed(intake.runIntake())
+                .whenReleased(intake.stopIntake());
 
 
-            shootTrigger = new Trigger(()->driver.getButton(GamepadKeys.Button.RIGHT_BUMPER)
+        shootTrigger = new Trigger(()->driver.getButton(GamepadKeys.Button.RIGHT_BUMPER)
             && shooter.readyToShoot()
             && shooter.getIsOpen())
                     .whenActive(new WaitCommand(750).andThen(intake.runIntake()));
@@ -60,11 +63,18 @@ public class mainOpMode extends CommandOpMode {
             driver.getGamepadButton(GamepadKeys.Button.DPAD_UP)
                             .whenPressed(()->driveBase.setHeading(0));
 
+            autoAlign = new Trigger(()->gamepad1.right_trigger_pressed)
+                    .whenActive(driveBase.autoAlign())
+                            .whenInactive(driveBase.stop());
+
+            driver.getGamepadButton(GamepadKeys.Button.DPAD_DOWN)
+                            .whenPressed(()->driveBase.resetOdo());
+
 
         driveBase.setDefaultCommand(new RunCommand(()->driveBase.manual(
                 driver.getLeftY(),
                 -driver.getLeftX(),
-                -driver.getRightX()/2
+                -driver.getRightX()*.66
         ),driveBase));
 
         while(opModeInInit()){
@@ -87,5 +97,6 @@ public class mainOpMode extends CommandOpMode {
 
     public void run(){
         super.run();
+        //shooter.setTargetDist(driveBase.getTargetDist());
     }
 }

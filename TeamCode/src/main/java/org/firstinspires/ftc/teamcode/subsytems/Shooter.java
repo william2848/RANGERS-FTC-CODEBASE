@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.subsytems;
 
 import android.util.Log;
 
+import com.pedropathing.math.Pose;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
@@ -24,6 +25,8 @@ public class Shooter extends SubsystemBase {
     private double flyWheelsetVelocity = 0;
     private double topRollersetVelocity = 0;
 
+    private Pose botPos = new Pose(0,0,0);
+
     private double targetDist = 3.33;
     public Shooter(HardwareMap hardwareMap){
         flyWheel = hardwareMap.get(DcMotorEx.class, "flyWheel");
@@ -43,6 +46,11 @@ public class Shooter extends SubsystemBase {
         register();
     }
 
+
+    public void updatePos(Pose pos){
+        botPos = pos;
+    }
+
     public void periodic(){
 
         flyWheelsetVelocity = targetDist * 250;
@@ -53,9 +61,14 @@ public class Shooter extends SubsystemBase {
 
     public boolean readyToShoot(){
         return Math.abs(topRoller.getVelocity()-topRollersetVelocity) < 30 &&
-                Math.abs(flyWheel.getVelocity()-flyWheelsetVelocity) < 30;
+                Math.abs(flyWheel.getVelocity()-flyWheelsetVelocity) < 30 &&
+                flyWheel.getVelocity() > 0
+                ;
     }
 
+    public void setTargetDist(double dist){
+        targetDist = dist;
+    }
     private void startShoot(){
         flyWheel.setVelocity(flyWheelsetVelocity);
         topRoller.setVelocity(topRollersetVelocity);
@@ -84,6 +97,7 @@ public class Shooter extends SubsystemBase {
     public Command shoot(){
         return Commands.startRun(()->startShoot(),
                 ()-> {
+            startShoot();
             if(readyToShoot()){
                 open();
             } else{
