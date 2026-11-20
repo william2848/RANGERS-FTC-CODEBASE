@@ -25,12 +25,24 @@ public class RobotConstants {
 
     }
 
+    @Config
     public static class intakeConstants {
+        public static double MAX_RPM = 6000;
+        public static double TARGET_RPM_TRANS = 4000;
+        public static  double kP = 2;
+        public static  double kI = 0;
+        public static  double kD = 0;
+        public static  double kS = 0;
+        public static  double kV = 3;//5
         public static double intakePower = 1;
         public static double transitionPower = 1;
+
     }
     public static class otherConstants{
         public static long waitForEmpty = 2000;
     }
+
+
+
 
 }

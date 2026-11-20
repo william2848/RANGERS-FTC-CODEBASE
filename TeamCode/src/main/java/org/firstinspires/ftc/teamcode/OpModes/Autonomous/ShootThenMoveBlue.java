@@ -48,12 +48,12 @@ public class ShootThenMoveBlue extends OpMode {
         return sequential(
                 instant(() -> shooter.shoot(0)),
                 waitMs(5000),
-                instant(() ->intake.setTransitionOnly(1)),
+                instant(() ->intake.setIntakeAndTransition(0,1)),
                 waitMs(1000),
                 instant(() -> intake.setIntakeAndTransition(1,1)),
                 waitMs(2000),
                 instant(() -> shooter.stopWithoutIdle()),
-                instant(() -> shooter.stopIdle(false)),
+                instant(() -> shooter.stopIdle(true)),
                 instant(() -> intake.stop()));
     }
 
@@ -85,6 +85,8 @@ public class ShootThenMoveBlue extends OpMode {
         follower.update();
         Scheduler.execute();
         shooter.periodic();
+        intake.periodic();
+
         //getting poses and stuff
         telemetry.addData("X", follower.pose().x());
         telemetry.addData("Y", follower.pose().y());

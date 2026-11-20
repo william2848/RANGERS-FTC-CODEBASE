@@ -46,13 +46,13 @@ public class ShootThenMoveRed extends OpMode {
     private Command shootStationary(){
         return sequential(
                 instant(() -> shooter.shoot(0)),
-                waitMs(5000),
-                instant(() ->intake.setTransitionOnly(1)),
-                waitMs(1000),
+                waitMs(6000),
+                instant(() ->intake.setIntakeAndTransition(0,1)),
+                waitMs(1500),
                 instant(() -> intake.setIntakeAndTransition(1,1)),
                 waitMs(2000),
                 instant(() -> shooter.stopWithoutIdle()),
-                instant(() -> shooter.stopIdle(false)),
+                instant(() -> shooter.stopIdle(false)),//eStop
                 instant(() -> intake.stop()));
     }
 
@@ -84,7 +84,7 @@ public class ShootThenMoveRed extends OpMode {
         follower.update();
         Scheduler.execute();
         shooter.periodic();
-
+        intake.periodic();
         //getting poses and stuff
         telemetry.addData("X", follower.pose().x());
         telemetry.addData("Y", follower.pose().y());
