@@ -20,17 +20,23 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 public class Shooter extends SubsystemBase {
 
   private final MotorEx rightShooter;
+    private final MotorEx shooterExtra;
     private double setpoint;
   private final MotorEx leftShooter;
+
   private final MotorGroup shooterMotors;
   private double targetRPM;
   private Telemetry telemetry;
   private boolean isOn = false;
 
     public Shooter(HardwareMap hardwareMap, Telemetry shooterTelemetry){
+        shooterExtra = new MotorEx(hardwareMap,"shooterExtra");
         rightShooter = new MotorEx(hardwareMap, "rightShooter", RobotConstants.shooterConstants.TICKS_PER_SEC, RobotConstants.shooterConstants.MAX_RPM);
         leftShooter = new MotorEx(hardwareMap, "leftShooter", RobotConstants.shooterConstants.TICKS_PER_SEC, RobotConstants.shooterConstants.MAX_RPM);
-        shooterMotors = new MotorGroup(leftShooter.setInverted(true), rightShooter);
+        leftShooter.setInverted(true);
+        shooterExtra.setInverted(true);
+        shooterMotors = new MotorGroup(leftShooter, shooterExtra,rightShooter);
+
         shooterMotors.setBuffer(RobotConstants.shooterConstants.VEL_BUFFER);
         shooterMotors.setVeloCoefficients(RobotConstants.shooterConstants.kP, RobotConstants.shooterConstants.kI, RobotConstants.shooterConstants.kD);//Set PID Value
         shooterMotors.setFeedforwardCoefficients(RobotConstants.shooterConstants.kS, RobotConstants.shooterConstants.kV);
@@ -39,9 +45,10 @@ public class Shooter extends SubsystemBase {
         register();
     }
     public Shooter(HardwareMap hardwareMap){
+        shooterExtra = new MotorEx(hardwareMap,"shooterExtra");
         rightShooter = new MotorEx(hardwareMap, "rightShooter", RobotConstants.shooterConstants.TICKS_PER_SEC, RobotConstants.shooterConstants.MAX_RPM);
         leftShooter = new MotorEx(hardwareMap, "leftShooter", RobotConstants.shooterConstants.TICKS_PER_SEC, RobotConstants.shooterConstants.MAX_RPM);
-        shooterMotors = new MotorGroup(leftShooter, rightShooter);
+        shooterMotors = new MotorGroup(leftShooter.setInverted(true), rightShooter,shooterExtra.setInverted(true));
         leftShooter.setBuffer(RobotConstants.shooterConstants.VEL_BUFFER);
         shooterMotors.setVeloCoefficients(RobotConstants.shooterConstants.kP, RobotConstants.shooterConstants.kI, RobotConstants.shooterConstants.kD);//Set PID Value
         shooterMotors.setFeedforwardCoefficients(RobotConstants.shooterConstants.kS, RobotConstants.shooterConstants.kV);

@@ -2,7 +2,6 @@ package org.firstinspires.ftc.teamcode.OpModes.TeleOp;
 
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
-import com.pedropathing.math.Pose;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.seattlesolvers.solverslib.command.CommandOpMode;
 import com.seattlesolvers.solverslib.command.ConditionalCommand;
@@ -11,8 +10,6 @@ import com.seattlesolvers.solverslib.command.RunCommand;
 import com.seattlesolvers.solverslib.gamepad.GamepadEx;
     import com.seattlesolvers.solverslib.gamepad.GamepadKeys;
 
-import org.firstinspires.ftc.teamcode.LightBar.Color;
-import org.firstinspires.ftc.teamcode.LightBar.PrismAnimations;
 import org.firstinspires.ftc.teamcode.subsytems.DriveBase;
 import org.firstinspires.ftc.teamcode.subsytems.FlowerMech;
 import org.firstinspires.ftc.teamcode.subsytems.Intake;
@@ -48,7 +45,7 @@ public class mainOpMode extends CommandOpMode {
         driver = new GamepadEx(gamepad1);
         driveBase = new DriveBase(hardwareMap);
         driveBase.setDefaultCommand(new RunCommand(()->driveBase.manual(driver.getLeftY(), driver.getLeftX(), driver.getRightX()),driveBase));
-        flowerMech.setToZero();
+        flowerMech.setToSto();
         shotType = RobotConstants.shooterConstants.TARGET_RPM;
 
 
@@ -56,11 +53,10 @@ public class mainOpMode extends CommandOpMode {
                 .whenPressed(new InstantCommand(() -> intake.setIntakeAndTransition(0.8, -1)))
                 .whenReleased(new InstantCommand(() -> intake.stop()));
 
-
         driver.getGamepadButton(assignment.OUTTAKE).whenPressed(intake.outtake()).whenReleased(new InstantCommand(intake::stop));
 
        driver.getGamepadButton(assignment.FLOWER)
-               .toggleWhenPressed(new InstantCommand(()-> flowerMech.down()),new InstantCommand(() -> flowerMech.setToZero()));
+               .toggleWhenPressed(new InstantCommand(()-> flowerMech.down()),new InstantCommand(() -> flowerMech.setToSto()));
 
        driver.getGamepadButton(assignment.THREESHOT)
                .toggleWhenPressed(
@@ -95,8 +91,8 @@ public class mainOpMode extends CommandOpMode {
                             lightbar.getCurrentLight("none");
                         }));
         driver.getGamepadButton(assignment.TRANSITION)
-                .whenPressed(new InstantCommand(() -> intake.setTransitionOnly(1)))
-                .whenReleased(new InstantCommand(() -> {intake.stop();lightbar.setManual(false);lightbar.getCurrentLight("none"); this.shotType = RobotConstants.shooterConstants.TARGET_RPM;}));
+                .whenPressed(new InstantCommand(() -> intake.setTransitionOnly(RobotConstants.intakeConstants.transitionPower)))
+                .whenReleased(new InstantCommand(() -> {intake.stopTransition();lightbar.setManual(false);lightbar.getCurrentLight("none"); this.shotType = RobotConstants.shooterConstants.TARGET_RPM;}));
 
         driver.getGamepadButton(assignment.SPOOLSHOOTER)
                 .whenPressed(new InstantCommand(()->{shooter.shoot(this.shotType);}))

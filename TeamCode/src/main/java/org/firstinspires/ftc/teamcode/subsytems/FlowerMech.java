@@ -15,12 +15,12 @@ public class FlowerMech extends SubsystemBase {
     }
 
 
-    public void setToZero(){
-        this.flowerServo.set(0.0);//DPAD DOWN
+    public void setToSto(){
+        this.flowerServo.set(0);//DPAD DOWN
     }
 
     public void down(){
-        this.flowerServo.set(0.6);
+        this.flowerServo.set(0.85);
     }
 
 
