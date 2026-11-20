@@ -7,6 +7,7 @@ import com.pedropathing.follower.Follower;
 import com.pedropathing.math.Pose;
 import com.pedropathing.paths.Path;
 import com.pedropathing.paths.curves.Line;
+import com.qualcomm.hardware.limelightvision.Limelight3A;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.seattlesolvers.solverslib.command.Command;
 import com.seattlesolvers.solverslib.command.DeferredCommand;
@@ -50,7 +51,10 @@ public class DriveBase extends SubsystemBase {
                 Collections.<Subsystem>singletonList(this)
                 );
     }
-
+    public Command align(Limelight limelight){
+        return new RunCommand(()->follower.hold(new Pose(follower.pose().x(),follower.pose().y(),limelight.targetHeading(follower.pose()))),limelight,this)
+                .interruptOn(()->limelight.getTx()>-RobotConstants.limelightConstants.buffer&&limelight.getTx()<RobotConstants.limelightConstants.buffer);
+    }
     public void setStartingPose(Pose pose){
         follower.setPose(pose);
     }
